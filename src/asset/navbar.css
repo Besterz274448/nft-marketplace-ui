@@ -18,7 +18,7 @@
   align-items: center;
   margin: 0px 30px;
   justify-content: center;
-  flex: 0.7;
+  flex: 0.75;
 }
 
 .navbar-searchfield {
@@ -35,7 +35,7 @@
   padding: 15px 10px;
   line-height: 20px;
   font-size: 16px;
-  width: 93%;
+  width: 95%;
   border: none;
 }
 
@@ -46,7 +46,7 @@
 .navbar-button {
   display: flex;
   justify-content: center;
-  flex: 0.2;
+  flex: 0.15;
 }
 
 .searchInputIcon {
@@ -56,9 +56,9 @@
 .inputTag {
   z-index: 150;
   position: absolute;
-  width: 64%;
+  width: 69%;
   margin: 25px auto;
-  left: 13%;
+  left: 12%;
   top: 10%;
   visibility: hidden;
   opacity: 0;
@@ -66,11 +66,15 @@
 }
 
 .keywordSearch {
+  padding:10px 16px;
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   background-color: white;
-  height: 70px;
+}
+
+.keywordSearch > span{
+  color:rgba(0,0,0,0.8);
 }
 
 .Backdrop {

@@ -19,12 +19,13 @@ function NavBar() {
         <div className="navbar-searchfield">
           <i className="fa fa-search searchInputIcon"></i>
           <input
+            placeholder="Search Artwork"
             className="navbar-input"
             onClick={() => {
               setSelect(true);
             }}
             onKeyDown={(e) => {
-              if (e.code == "Escape") {
+              if (e.code === "Escape") {
                 setSelect(false);
               }
             }}
@@ -32,7 +33,7 @@ function NavBar() {
         </div>
       </div>
       <div className="navbar-button">
-        <Button name="Connect Wallet" />
+        <Button width="80%" name="Connect Wallet" />
       </div>
       <div
         className="Backdrop"
@@ -41,7 +42,9 @@ function NavBar() {
         }}
         style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
       <div className="inputTag" style={selectInput ? { opacity: 1, visibility: "visible" } : {}}>
-        <div className="keywordSearch"></div>
+        <div className="keywordSearch">
+          <span className="keywordSearch-header">tags</span>
+        </div>
       </div>
     </div>
   );
