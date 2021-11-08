@@ -46,3 +46,12 @@
 .searchInputIcon {
   color: rgba(0, 0, 0, 0.1);
 }
+
+@media only screen and (max-width: 600px) {
+  .navbar-searchfield {
+    display: none;
+  }
+  .navbar-button {
+    display: none;
+  }
+}

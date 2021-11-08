@@ -1,4 +1,5 @@
 import React from "react";
+import ArtistContract from "./ArtistContract";
 import "../asset/components.css";
 
 function ImageCard({ src = "", name = "", price = 0.00, contract = "" }) {
@@ -7,7 +8,7 @@ function ImageCard({ src = "", name = "", price = 0.00, contract = "" }) {
       <img className="image-card-img" src={src} alt="imgCard"></img>
       <div className="image-card-detail">
           <span>{name}</span>
-          <div>@{contract}</div>
+          <div><ArtistContract border="none"/></div>
       </div>
       <div>
       </div>
