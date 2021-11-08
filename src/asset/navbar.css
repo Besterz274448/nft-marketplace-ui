@@ -1,0 +1,48 @@
+.navbar-root {
+  padding: 25px 0px;
+  width: 100%;
+  display: flex;
+  background-color: white;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.navbar-logo {
+  display: flex;
+  justify-content: center;
+  flex: 0.1;
+}
+
+.navbar-searchfield {
+  align-items: center;
+  margin: 0px 30px;
+  display: flex;
+  justify-content: center;
+  flex: 0.7;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 40px;
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-input {
+  padding: 15px 10px;
+  line-height: 20px;
+  font-size: 16px;
+  width: 93%;
+  border: none;
+}
+
+.navbar-input {
+  outline: none;
+}
+
+.navbar-button {
+  display: flex;
+  justify-content: center;
+  flex: 0.2;
+}
+
+.searchInputIcon {
+  color: rgba(0, 0, 0, 0.1);
+}
