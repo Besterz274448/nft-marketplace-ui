@@ -1,4 +1,17 @@
 /* general css */
+.flex {
+  display: flex;
+}
+
+.navlink {
+  color: rgba(0, 0, 0, 8);
+  margin-right:20px;
+  text-decoration: none;
+}
+
+.active-link {
+  border-bottom: 1px solid black;
+}
 
 /* component css */
 .button {
@@ -73,7 +86,7 @@
 
 .image-card-detail {
   padding: 5px 15px;
-  height: 120px;
+  height: 110px;
   overflow: hidden;
 }
 
@@ -150,4 +163,27 @@
 
 .lastestsold-new-owner > h4 {
   color: rgba(0, 0, 0, 0.4);
+}
+
+.menuTabs-tabs-container {
+}
+
+.menuTabs-root {
+  justify-content: space-between;
+}
+
+.menuTabs-tab {
+  cursor: pointer;
+  padding-bottom: 16px;
+}
+
+.menuTabs-tab-name {
+  font-size: large;
+  font-weight: bold;
+  padding-right: 16px;
+}
+
+.menuTabs-tab-count {
+  font-size: large;
+  font-weight: bold;
 }
