@@ -206,9 +206,57 @@
 .price-range-input-box{
   justify-content: space-between;
 }
-.price-range-input{
-  border-radius:5px;
-}
-.price-range-button-box{
 
+.price-range-input{
+  width:40%;
+  border:1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding:10px 10px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.15);
+
+}
+
+.price-range-input > input{
+  border:none;
+  outline:none;
+  width:65%;
+  line-height: 20px;  
+  font-size: 18px;
+}
+
+.price-range-input > label{
+  font-weight: bold;
+}
+
+
+.price-range-button-box{
+  margin:24px 0px;
+  
+}
+
+
+.price-range-button{
+  width:100%;
+  background-color: white;
+  border:none;
+  border:1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 16px 20px;
+  cursor:pointer;
+  -webkit-transition: height 0.3s ease-in-out, background-color 0.3s;
+  -o-transition: height 0.3s ease-in-out, background-color 0.3s;
+  -moz-transition: height 0.3s ease-in-out, background-color 0.3s;
+  transition: height 0.3s ease-in-out, background-color 0.3s;
+}
+
+.price-range-button:hover{
+  background-color: black;
+  color: white;
+  -webkit-transition: height 0.3s ease-in-out, background-color 0.3s;
+  -o-transition: height 0.3s ease-in-out, background-color 0.3s;
+  -moz-transition: height 0.3s ease-in-out, background-color 0.3s;
+  transition: height 0.3s ease-in-out, background-color 0.3s;
+  
 }

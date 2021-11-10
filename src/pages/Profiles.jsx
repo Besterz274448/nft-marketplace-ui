@@ -1,14 +1,23 @@
 import React from "react";
 import "../asset/main.css";
 import Grid from "@mui/material/Grid";
-import ImageCard from "../components/ImageCard";
-import ArtistCard from "../components/ArtistCard";
+import Accord from "../components/Accord";
+import PriceRange from "../components/PriceRange";
 
 function Profiles() {
+  var option = ["All", "Sold", "Available"];
   return (
-    <div>
-      test Profiles
-      <ArtistCard/>
+    <div className="feed-items-container">
+      <div className="feed-search">
+        <Accord title="Price range">
+          <PriceRange/>
+        </Accord>
+        <Accord title="Social Verification">
+        </Accord>
+      </div>
+      <div className="feed-items">
+      
+      </div>
     </div>
   );
 }

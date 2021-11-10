@@ -13,9 +13,14 @@
 }
 
 
+
+
 @media only screen and (min-width: 1000px) {
   .feed-search {
     flex: 0.23;
+    position: sticky;
+    top:0;
+    height: 100vh;
   }
   .feed-items {
     flex: 0.75;
