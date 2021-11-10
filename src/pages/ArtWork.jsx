@@ -3,13 +3,20 @@ import "../asset/main.css";
 import Grid from "@mui/material/Grid";
 import ImageCard from "../components/ImageCard";
 import Accord from "../components/Accord";
+import RadioGroupButton from "../components/RadioGroupButton";
+import PriceRange from "../components/PriceRange";
 
 function ArtWork() {
   var option = ["All", "Sold", "Available"];
   return (
     <div className="feed-items-container">
       <div className="feed-search">
-        <Accord title="title" option={option} select={false}></Accord>
+        <Accord title="Price range">
+          <PriceRange/>
+        </Accord>
+        <Accord title="Availability">
+          <RadioGroupButton title="Availability" option={option} />
+        </Accord>
       </div>
       <div className="feed-items">
         <Grid alignItems="center" justifyContent="center" rowGap={3} container spacing={2}>

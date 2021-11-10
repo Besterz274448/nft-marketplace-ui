@@ -3,9 +3,13 @@
   display: flex;
 }
 
+.b{
+  font-weight: bold;
+}
+
 .navlink {
   color: rgba(0, 0, 0, 8);
-  margin-right:20px;
+  margin-right: 20px;
   text-decoration: none;
 }
 
@@ -165,7 +169,7 @@
   color: rgba(0, 0, 0, 0.4);
 }
 
-.menuTabs-tabs-container{
+.menuTabs-tabs-container {
 }
 
 .menuTabs-root {
@@ -186,4 +190,25 @@
 .menuTabs-tab-count {
   font-size: large;
   font-weight: bold;
+}
+
+.accord-title {
+  font-size: 18px;
+}
+
+.accord-box {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  margin: 5px 0px;
+  padding: 5px 15px;
+}
+
+.price-range-input-box{
+  justify-content: space-between;
+}
+.price-range-input{
+  border-radius:5px;
+}
+.price-range-button-box{
+
 }

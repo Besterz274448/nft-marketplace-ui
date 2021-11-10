@@ -76,7 +76,6 @@ function Home() {
           </Grid>
         </Grid>
       </SectionBar>
-
       <SectionBar name="Collections" link="collections">
         <Grid alignItems="center" justifyContent="center" container spacing={3}>
           <Grid item lg={3} md={4} sm={6} xs={10}>

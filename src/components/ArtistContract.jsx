@@ -1,8 +1,23 @@
 import React from "react";
 import "../asset/components.css";
 import Avatar from "@mui/material/Avatar";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
 
 function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0,0,0.05)" }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   const ButtonStyle = {
     color: "rgba(0,0,0,0.6)",
     fontWeight: "bold",
@@ -16,7 +31,7 @@ function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0
   };
   return (
     <div>
-      <button className={border == "none" ? "" : "button"} style={ButtonStyle}>
+      <button className={border == "none" ? "" : "button"} style={ButtonStyle} onClick={handleClick}>
         <span style={{ display: "inline-block" }}>
           <Avatar
             alt="Remy Sharp"
@@ -24,8 +39,19 @@ function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0
             sx={{ width: 24, height: 24 }}
           />
         </span>
-        <span> @userContract</span>
+        <span>@userContract</span>
       </button>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}>
+        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+      </Popover>
     </div>
   );
 }
