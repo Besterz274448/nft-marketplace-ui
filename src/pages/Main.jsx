@@ -15,7 +15,7 @@ function Main() {
         <section className="main-content">
           <Routes>
             <Route exact path="/" element={<Home />} />
-            <Route  path="feed/*" element={<Feed />} />
+            <Route path="feed/*" element={<Feed />} />
           </Routes>
         </section>
       </div>

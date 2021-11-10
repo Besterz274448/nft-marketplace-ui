@@ -8,12 +8,14 @@
 
 .feed-items-container {
   display: flex;
+  justify-content: space-between;
   padding: 10px 0px;
 }
 
+
 @media only screen and (min-width: 1000px) {
   .feed-search {
-    flex: 0.25;
+    flex: 0.23;
   }
   .feed-items {
     flex: 0.75;
