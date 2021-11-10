@@ -6,10 +6,10 @@ function SectionBar(props) {
   return (
     <>
       <div className="section-bar">
-        <div className="section-name">{props.name}</div>
+        <div className="section-name">{props.title}</div>
         <div>
           <NavLink to={props.link} className="section-link">
-            View all {props.link}
+            View all {props.name}
           </NavLink>
         </div>
       </div>

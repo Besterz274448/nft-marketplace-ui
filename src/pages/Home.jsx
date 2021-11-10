@@ -8,7 +8,7 @@ function Home() {
   return (
     <div>
       <LastestBuy src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}/>
-      <SectionBar name="Trending auctions" link="artworks">
+      <SectionBar title="Trending auctions" link="/feed/artworks" name="artworks" >
         <Grid alignItems="center" justifyContent="center" rowGap={3} container spacing={3}>
           <Grid item lg={3} md={4} sm={6} xs={10}>
             <ImageCard
@@ -76,7 +76,7 @@ function Home() {
           </Grid>
         </Grid>
       </SectionBar>
-      <SectionBar name="Collections" link="collections">
+      <SectionBar title="Collections" link="/feed/profiles" name="collections">
         <Grid alignItems="center" justifyContent="center" container spacing={3}>
           <Grid item lg={3} md={4} sm={6} xs={10}>
             <ImageCard
@@ -144,7 +144,7 @@ function Home() {
           </Grid>
         </Grid>
       </SectionBar>
-      <SectionBar name="Featured artworks" link="artworks">
+      <SectionBar title="Featured artworks" link="/feed/artworks" name="artworks">
         <Grid alignItems="center" justifyContent="center" container spacing={3}>
           <Grid item lg={3} md={4} sm={6} xs={10}>
             <ImageCard
