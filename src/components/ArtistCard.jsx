@@ -14,7 +14,7 @@ function ArtistCard({
       </div>
       <div className="artist-detail-container">
         <div className="artist-detail-avatar-box">
-            <div><img src={src} width="70px" height="70px"/></div>
+            <div><img src={src}/></div>
         </div>
         <div className="artist-detail-name b">{name}</div>
         <div className="artist-detail-contract b">

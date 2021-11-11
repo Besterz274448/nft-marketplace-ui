@@ -285,17 +285,12 @@
   font-weight: bold;
 }
 
-.artist-detail-avatar-box > div {
-  /* style={{padding:"5px",background:"white",width:"70px",height:"70px",borderRadius:"50px"}} */
-  padding: 5px;
-  background-color: white;
+.artist-detail-avatar-box > div > img {
+  border: 5px solid white;
+  border-radius: 50px;
+  /* width="70px" height="70px" */
   width: 70px;
   height: 70px;
-  border-radius: 50px;
-}
-
-.artist-detail-avatar-box > div > img {
-  border-radius: 50px;
 }
 
 .artist-detail-name {

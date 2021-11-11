@@ -12,14 +12,11 @@
   padding: 10px 0px;
 }
 
-
-
-
 @media only screen and (min-width: 1000px) {
   .feed-search {
     flex: 0.23;
     position: sticky;
-    top:0;
+    top: 0;
     height: 100vh;
   }
   .feed-items {
@@ -29,10 +26,111 @@
 @media only screen and (max-width: 1000px) {
   .feed-search {
     flex: 0;
-    display:none;
+    display: none;
   }
-  
   .feed-items {
     flex: 1;
+  }
+}
+
+.testimagebackground {
+  position: relative;
+  margin-top: -100px;
+  z-index: 100;
+}
+
+.userprofile-contract-container {
+  margin: 0px 25px;
+  padding: 10px;
+  position: relative;
+  margin-top: -160px;
+  z-index: 20;
+  color: #fff;
+  font-weight: bold;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userprofile-contract-avatar {
+  border-radius: 150px;
+  border: 10px solid white;
+}
+
+.userprofile-contract-button {
+  margin-top: 70px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  border: 1px solid white;
+  background-color: white;
+  padding: 18px 25px;
+  font-size: 18px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.userprofile-description-container {
+  margin: 30px 40px;
+}
+
+.userprofile-description-text-container {
+  flex: 0.3;
+}
+
+.userprofile-wallet-container {
+  width: fit-content;
+  align-items: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+
+.userprofile-user-id {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border-radius: 20px;
+}
+
+.userprofile-user-contractName {
+  margin: 16px 0px;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.userprofile-descrition-artworks {
+  flex: 0.7;
+}
+
+.userprofile-follow{
+  margin:20px 0px;
+  margin-right: 25%;
+  display:flex;
+  justify-content: space-between;
+}
+
+.userprofile-user-contractAddress {
+  margin: 4px 0px;
+  font-size: 30px;
+  font-weight: bold;
+  background: linear-gradient(
+    90deg,
+    rgba(203, 180, 0, 1) 0%,
+    rgba(179, 193, 0, 0.9808298319327731) 10%,
+    rgba(68, 190, 0, 1) 20%,
+    rgba(0, 193, 145, 1) 30%,
+    rgba(1, 140, 213, 1) 40%,
+    rgba(18, 0, 186, 1) 50%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media only screen and (max-width: 600px) {
+  .userprofile-contract-container {
+    justify-content: center;
+    flex-direction: column;
+  }
+  .userprofile-contract-button {
+    margin-top: 0;
   }
 }

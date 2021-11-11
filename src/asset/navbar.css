@@ -45,6 +45,7 @@
 
 .navbar-button {
   display: flex;
+
   justify-content: center;
   flex: 0.15;
 }
@@ -66,15 +67,15 @@
 }
 
 .keywordSearch {
-  padding:10px 16px;
+  padding: 10px 16px;
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   background-color: white;
 }
 
-.keywordSearch > span{
-  color:rgba(0,0,0,0.8);
+.keywordSearch > span {
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .Backdrop {

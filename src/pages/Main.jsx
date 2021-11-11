@@ -2,8 +2,7 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import Home from "../pages/Home";
 import Feed from "../pages/Feed";
-import ArtWork from "../pages/ArtWork";
-import Profiles from "../pages/Profiles";
+import UserProfile from "../pages/UserProfile";
 import "../asset/main.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -16,6 +15,7 @@ function Main() {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path="feed/*" element={<Feed />} />
+            <Route path="/user/:id" element={<UserProfile />} />
           </Routes>
         </section>
       </div>
