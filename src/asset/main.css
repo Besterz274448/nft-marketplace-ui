@@ -39,6 +39,10 @@
   z-index: 100;
 }
 
+.userprofile-background{
+  filter:brightness(0.5);
+}
+
 .userprofile-contract-container {
   margin: 0px 25px;
   padding: 10px;
