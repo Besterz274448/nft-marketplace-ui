@@ -1,7 +1,7 @@
 import React from "react";
 import "../asset/components.css";
 
-function Button({ name, width = "70%", sx ={} }) {
+function Button({ name, width = "70%", sx ={},onClick={} }) {
   const ButtonStyle={
       color:"white",
       fontWeight:"bold",
@@ -14,7 +14,7 @@ function Button({ name, width = "70%", sx ={} }) {
       width: width,
       ...sx
   }
-  return <button className="button" style={ButtonStyle}>{name}</button>;
+  return <button className="button" onClick={onClick} style={ButtonStyle}>{name}</button>;
 }
 
 export default Button;
