@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import MiniMenu from "./MiniMenu";
+import PhoneMunu from "./PhoneMunu";
 
 const style = {
   position: "absolute",
@@ -49,7 +49,7 @@ function NavBar() {
       <div className="navbar-root">
         <div
           className="navbar-logo"
-          style={{ display: selectInput && window.outerWidth < 600 ? "none" : "flex" }}>
+          style={{ display: selectInput && window.innerWidth < 800 ? "none" : "flex" }}>
           <NavLink to="/">
             <img
               height="55px"
@@ -72,30 +72,34 @@ function NavBar() {
               }}
             />
           </div>
+          <div
+            className="inputTag"
+            style={selectInput ? { opacity: 1, visibility: "visible" } : {}}>
+            <div className="keywordSearch">
+              <span className="keywordSearch-header">tags</span>
+            </div>
+          </div>
         </div>
         <div className="navbar-button">
           <Button //wallet button
             onClick={handleOpen}
-            width="fit-content"
+            width="150%"
             sx={{
-              padding: "14px 14px",
+              padding: "17.5px 14px",
             }}
             name="Connect Wallet"
           />
         </div>
         <div className="nevbar-phone">
-          <MiniMenu />
+          <PhoneMunu name="Foundaton" color='#f0f'>
+            <p>Phone Menu</p>
+          </PhoneMunu>
         </div>
 
         <div //blackdrop
           className="Backdrop"
           onClick={handleInputClose}
           style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
-        <div className="inputTag" style={selectInput ? { opacity: 1, visibility: "visible" } : {}}>
-          <div className="keywordSearch">
-            <span className="keywordSearch-header">tags</span>
-          </div>
-        </div>
       </div>
       <>
         <Modal //modal connet wallet

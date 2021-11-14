@@ -11,14 +11,14 @@
 .navbar-logo {
   display: flex;
   justify-content: center;
-  flex: 0.1;
 }
 
 .navbar-searchfield-container {
   align-items: center;
   margin: 0px 30px;
   justify-content: center;
-  flex: 1;
+  flex: 8;
+  position: relative;
 }
 
 .navbar-searchfield {
@@ -47,7 +47,7 @@
   padding: 15px 10px;
   line-height: 20px;
   font-size: 16px;
-  width: 85%;
+  width: 100%;
   border: none;
 }
 
@@ -58,7 +58,6 @@
 .navbar-button {
   display: flex; /*remark*/
   justify-content: center;
-  flex: 0.15;
 }
 
 .nevbar-phone {
@@ -74,17 +73,16 @@
 .inputTag {
   z-index: 150;
   position: absolute;
-  width: 69%;
-  margin: 25px auto;
-  left: 12%;
-  top: 10%;
+  width: 99%;
+  margin: auto auto;
+  top: 120%;
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.6s linear, opacity 0.1s linear;
 }
 
 .keywordSearch {
-  padding: 10px 16px;
+  padding: 10px 5px;
   width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -108,8 +106,7 @@
   transition: visibility 0.6s linear, opacity 0.1s linear;
 }
 
-@media only screen and (max-width: 600px) {
-  
+@media only screen and (max-width: 800px) {
   .navbar-button {
     display: none;
   }
