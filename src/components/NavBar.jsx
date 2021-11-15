@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import PhoneMunu from "./PhoneMunu";
 
 const style = {
   position: "absolute",
@@ -21,16 +22,34 @@ const style = {
   p: 5,
 };
 
+const searchPhoneStyle = {
+  position: "absolute",
+  top: "10%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 250,
+  height: 40,
+  bgcolor: "background.paper",
+  border: "1px solid rgba(0,0,0,0.4)",
+  borderRadius: "24px",
+  boxShadow: 24,
+  textAlign: "center",
+  p: 5,
+};
+
 function NavBar() {
   const [selectInput, setSelect] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const handleInputOpen = () => setSelect(true);
+  const handleInputClose = () => setSelect(false);
   return (
     <>
       <div className="navbar-root">
-        <div className="navbar-logo">
+        <div
+          className="navbar-logo"
+          style={{ display: selectInput && window.innerWidth < 800 ? "none" : "flex" }}>
           <NavLink to="/">
             <img
               height="55px"
@@ -39,47 +58,51 @@ function NavBar() {
             />
           </NavLink>
         </div>
-        <div className="navbar-searchfield-container">
+        <div className={"navbar-searchfield-container"}>
           <div className="navbar-searchfield">
-            <i className="fa fa-search searchInputIcon"></i>
+            <p style={{ color: "#707070" }}>🔎︎</p>
             <input
               placeholder="Search Artwork"
               className="navbar-input"
-              onClick={() => {
-                setSelect(true);
-              }}
+              onClick={handleInputOpen}
               onKeyDown={(e) => {
                 if (e.code === "Escape") {
-                  setSelect(false);
+                  handleInputClose();
                 }
               }}
             />
           </div>
+          <div
+            className="inputTag"
+            style={selectInput ? { opacity: 1, visibility: "visible" } : {}}>
+            <div className="keywordSearch">
+              <span className="keywordSearch-header">tags</span>
+            </div>
+          </div>
         </div>
         <div className="navbar-button">
-          <Button
+          <Button //wallet button
             onClick={handleOpen}
-            width="fit-content"
+            width="150%"
             sx={{
-              padding: "14px 14px",
+              padding: "17.5px 14px",
             }}
             name="Connect Wallet"
           />
         </div>
-        <div
-          className="Backdrop"
-          onClick={() => {
-            setSelect(false);
-          }}
-          style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
-        <div className="inputTag" style={selectInput ? { opacity: 1, visibility: "visible" } : {}}>
-          <div className="keywordSearch">
-            <span className="keywordSearch-header">tags</span>
-          </div>
+        <div className="nevbar-phone">
+          <PhoneMunu name="Foundaton" color='#f0f'>
+            <p>Phone Menu</p>
+          </PhoneMunu>
         </div>
+
+        <div //blackdrop
+          className="Backdrop"
+          onClick={handleInputClose}
+          style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
       </div>
       <>
-        <Modal
+        <Modal //modal connet wallet
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -101,7 +124,7 @@ function NavBar() {
                     "linear-gradient(90deg, rgba(244,93,47,1) 0%, rgba(254,209,119,1) 100%)",
                 }}
                 name={
-                  <div style={{display:"flex",justifyContent:"space-between"}}>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <span>Metamask</span>
                     <img src={MetaMaskLogo} width="20px"></img>
                   </div>
