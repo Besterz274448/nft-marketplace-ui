@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 
 function Home() {
   return (
-    <div>
+    <div className="main-content">
       <LastestBuy src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}/>
       <SectionBar title="Trending auctions" link="/feed/artworks" name="artworks" >
         <Grid alignItems="center" justifyContent="center" rowGap={3} container spacing={3}>

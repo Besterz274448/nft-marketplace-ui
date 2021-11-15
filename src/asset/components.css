@@ -7,6 +7,11 @@
   font-weight: bold;
 }
 
+.p0{
+  padding:0;
+  margin:0;
+}
+
 .navlink {
   color: rgba(0, 0, 0, 8);
   margin-right: 20px;
@@ -306,8 +311,7 @@
     rgba(179, 193, 0, 0.9808298319327731) 10%,
     rgba(68, 190, 0, 1) 20%,
     rgba(0, 193, 145, 1) 30%,
-    rgba(1, 140, 213, 1) 40%,
-    rgba(18, 0, 186, 1) 50%
+    rgba(1, 140, 213, 1) 60%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
