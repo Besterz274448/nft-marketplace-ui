@@ -114,10 +114,13 @@
 
 .userprofile-follow {
   margin: 20px 0px;
-  margin-right: 25%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.userprofile-follow > * {
+  flex: 0.33;
 }
 
 .userprofile-follow-text {
@@ -182,7 +185,7 @@
   background-color: rgb(242, 242, 242);
 }
 
-.artworkdetail-img > img{
+.artworkdetail-img > img {
   width: 30%;
   height: 60%;
 }
@@ -203,8 +206,7 @@
   margin-top: 70px;
 }
 
-
-.artworkdetail-share-button { 
+.artworkdetail-share-button {
   display: flex;
   align-items: center;
   border-radius: 30px;
@@ -217,7 +219,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-
 @media only screen and (max-width: 600px) {
   .userprofile-contract-container {
     justify-content: center;
@@ -227,16 +228,31 @@
     flex-direction: column;
   }
 
+  .userprofile-description-text-container > * {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .userprofile-contract-button {
     margin-top: 0;
   }
 
+  .userprofile-avatar-followed {
+    justify-content: center;
+  }
+
+  .userprofile-descrition-artworks {
+    margin-top: 5%;
+  }
+
+  /* artwork detail page responsive */
   .artworkdetail-button-container {
     margin-left: 10px;
     margin-right: 10px;
   }
 
-  .artworkdetail-img  > img {
-    width:60%;
+  .artworkdetail-img > img {
+    width: 80%;
   }
 }

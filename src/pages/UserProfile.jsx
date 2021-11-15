@@ -65,7 +65,7 @@ function UserProfile({
               </div>
             </div>
             <div className="userprofile-user-contractName">{username}</div>
-            <div>
+            <div className="userprofile-user-contractAddress">
               <span className="userprofile-user-contractAddress">{contractAddress}</span>
             </div>
             <div className="userprofile-follow">
@@ -86,7 +86,7 @@ function UserProfile({
             </div>
             <div className="userprofile-followedBy">
               <div className="b">Folllowed By</div>
-              <div className="flex">
+              <div className="userprofile-avatar-followed flex">
                 <div className="avatar-followed">
                   <Avatar
                     alt="Remy Sharp"
