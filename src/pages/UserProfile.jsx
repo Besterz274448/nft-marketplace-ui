@@ -26,6 +26,8 @@ function UserProfile({
   username = "Edward Snowden",
   contractAddress = "@snowden",
 }) {
+
+  
   const copyToClipboard = () => {
     let copyText = document.getElementById("userprofile-user-wallet");
     navigator.clipboard.writeText(copyText.innerHTML);
@@ -45,7 +47,7 @@ function UserProfile({
           />
           <button className="userprofile-contract-button b">Collected By</button>
         </div>
-        <div className="userprofile-description-container flex">
+        <div className="userprofile-description-container">
           <div className="userprofile-description-text-container">
             <div className="userprofile-wallet-container flex">
               <div className="userprofile-user-id">#{userId}</div>
@@ -148,7 +150,7 @@ function UserProfile({
             />
             <div style={{ marginTop: "1%" }}></div>
             <Grid alignItems="center" rowGap={3} container spacing={2}>
-              <Grid item lg={4} md={6} sm={6} xs={11}>
+              <Grid item lg={4} md={6} sm={6} xs={12}>
                 <ImageCard
                   src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
                   name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
@@ -156,7 +158,7 @@ function UserProfile({
                   price={1.0}
                 />
               </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={11}>
+              <Grid item lg={4} md={6} sm={6} xs={12}>
                 <ImageCard
                   src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
                   name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"

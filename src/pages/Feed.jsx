@@ -11,8 +11,8 @@ function Feed({}) {
     <div className="feed-content main-content">
       <MenuTabs sortComponent={<>TEST</>} />
       <Routes>
-        <Route exact path="/artworks" element={<ArtWork/>} />
-        <Route exact path="/profiles" element={<Profiles />} />
+        <Route exact="true" path="/artworks" element={<ArtWork/>} />
+        <Route exact="true" path="/profiles" element={<Profiles />} />
       </Routes>
     </div>
   );

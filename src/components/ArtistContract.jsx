@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 
-function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0,0,0.05)" }) {
+function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0,0,0.05)",classes="" }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -30,7 +30,7 @@ function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0
     ...sx,
   };
   return (
-    <div>
+    <div className={classes}>
       <button className={border == "none" ? "" : "button"} style={ButtonStyle} onClick={handleClick}>
         <span style={{ display: "inline-block" }}>
           <Avatar

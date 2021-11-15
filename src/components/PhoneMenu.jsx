@@ -36,6 +36,8 @@ export default function MiniMunu(props) {
           marginRight: "10px",
           color: "black",
           background: "white",
+          zIndex:150,
+          position:"relative",
         }}
       />
       <Dialog fullScreen open={openMenu} onClose={handleClose} TransitionComponent={Transition}>
