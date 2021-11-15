@@ -14,14 +14,19 @@ function ArtistCard({
       </div>
       <div className="artist-detail-container">
         <div className="artist-detail-avatar-box">
-            <div><img src={src}/></div>
+          <div>
+            <img src={src} />
+          </div>
         </div>
         <div className="artist-detail-name b">{name}</div>
-        <div className="artist-detail-contract b">
-          <span>@</span>
-          <span>{contract}</span>
+        <div>
+          <span className="artist-detail-contract b">@{contract}</span>
         </div>
-        <div className="artist-detail-description">{artistDescription.length > 120 ? artistDescription.substring(0,120) + "..." : artistDescription }</div>
+        <div className="artist-detail-description">
+          {artistDescription.length > 120
+            ? artistDescription.substring(0, 120) + "..."
+            : artistDescription}
+        </div>
       </div>
     </div>
   );

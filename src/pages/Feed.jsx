@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function Feed({}) {
   return (
       //get amount of data
-    <div className="feed-content">
+    <div className="feed-content main-content">
       <MenuTabs sortComponent={<>TEST</>} />
       <Routes>
         <Route exact path="/artworks" element={<ArtWork/>} />

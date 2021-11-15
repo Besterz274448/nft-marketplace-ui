@@ -1,3 +1,8 @@
+.main-root {
+  margin: 0px auto;
+  max-width: 1600px;
+}
+
 .main-content {
   padding: 0px 16px;
 }
@@ -33,10 +38,14 @@
   }
 }
 
-.testimagebackground {
+.userprofile-root {
   position: relative;
   margin-top: -100px;
   z-index: 100;
+}
+
+.userprofile-background {
+  filter: brightness(0.5);
 }
 
 .userprofile-contract-container {
@@ -64,7 +73,7 @@
   border: 1px solid white;
   background-color: white;
   padding: 18px 25px;
-  font-size: 18px;
+  font-size: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
@@ -74,6 +83,7 @@
 
 .userprofile-description-text-container {
   flex: 0.3;
+  margin: 0px 20px;
 }
 
 .userprofile-wallet-container {
@@ -101,11 +111,44 @@
   flex: 0.7;
 }
 
-.userprofile-follow{
-  margin:20px 0px;
+.userprofile-follow {
+  margin: 20px 0px;
   margin-right: 25%;
-  display:flex;
+  display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.userprofile-follow-text {
+  font-size: 17px;
+}
+
+.userprofile-followedBy > div {
+  margin: 10px 0px;
+  color: rgba(0,0,0,0.6);
+}
+
+.avatar-followed {
+  direction: ltr;
+  text-align: left;
+  border: 3px solid white;
+  border-radius: 50%;
+  position: relative;
+  left: 5px;
+  margin-left: -7px;
+  z-index: 1;
+}
+
+.openModal-followed-button{
+  cursor: pointer;
+}
+
+.userprofile-header {
+  margin-top: 30px;
+}
+
+.userprofile-bio-detail{
+  font-size: 14px;
 }
 
 .userprofile-user-contractAddress {
@@ -118,8 +161,7 @@
     rgba(179, 193, 0, 0.9808298319327731) 10%,
     rgba(68, 190, 0, 1) 20%,
     rgba(0, 193, 145, 1) 30%,
-    rgba(1, 140, 213, 1) 40%,
-    rgba(18, 0, 186, 1) 50%
+    rgba(1, 140, 213, 1) 60%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
