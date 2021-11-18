@@ -9,6 +9,9 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import ImageCard from "../components/ImageCard";
 import NavBar from "../components/NavBar";
+import UserItem from "../components/UserItem";
+import { Routes, Route } from "react-router-dom";
+import ArtWork from "./ArtWork";
 
 const FollowDetail = ({ amount, text }) => {
   return (
@@ -26,13 +29,13 @@ function UserProfile({
   username = "Edward Snowden",
   contractAddress = "@snowden",
 }) {
-
-  
   const copyToClipboard = () => {
     let copyText = document.getElementById("userprofile-user-wallet");
     navigator.clipboard.writeText(copyText.innerHTML);
     alert("Copied the text: " + copyText.innerHTML);
   };
+
+  const id = "test23"
   return (
     <>
       <div className="userprofile-root ">
@@ -143,30 +146,16 @@ function UserProfile({
             {/* รอแก้ โลจิค menutabs << ใช้แบบ เปลี่ยน component ไม่ได้ */}
             <MenuTabs
               menu={[
-                { name: "Created", to: "/feed/profiles", count: 32 },
-                { name: "Owned", to: "/feed/artworks", count: 5 },
+                { name: "Created", to: `/user/${id}/created`, count: 32 },
+                { name: "Owned", to: `/user/${id}/owned`, count: 5 },
               ]}
               sortComponent={<></>}
             />
             <div style={{ marginTop: "1%" }}></div>
-            <Grid alignItems="center" rowGap={3} container spacing={2}>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
-                <ImageCard
-                  src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-                  name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-                  contract="moisesdsanabria"
-                  price={1.0}
-                />
-              </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={12}>
-                <ImageCard
-                  src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-                  name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-                  contract="moisesdsanabria"
-                  price={1.0}
-                />
-              </Grid>
-            </Grid>
+            <Routes>
+              <Route exact="true" path="/:id/created" element={<UserItem />} />
+              <Route exact="true" path="/:id/owned" element={<UserItem />} />
+            </Routes>
           </div>
         </div>
       </div>

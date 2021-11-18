@@ -5,6 +5,8 @@ import ShareIcon from "@mui/icons-material/Share";
 
 function ArtworkDetail({
   background = "https://thaipublica.org/wp-content/uploads/2013/06/edward-snowden.jpg",
+  image_name = "Ring Lake Rose",
+  image_description = "Digital 3D C4D Still Render By David Stenbeck @dovneon",
 }) {
   return (
     <div className="artworkdetail-root ">
@@ -18,11 +20,13 @@ function ArtworkDetail({
           <span>Shared</span>
         </button>
       </div>
-      <div className="artworkdetail-container">
-        <div className="artworkdetai-left-container">
-          
+      <div className="artworkdetail-container flex">
+        <div className="artworkdetail-half-container">
+          <h1 className="artworkdetail-image-name">{image_name}</h1>
+          <h6>Description</h6>
+          <p>{image_description}</p>
         </div>
-        <div className="artworkdetai-right-container"></div>
+        <div className="artworkdetail-half-container">test</div>
       </div>
     </div>
   );

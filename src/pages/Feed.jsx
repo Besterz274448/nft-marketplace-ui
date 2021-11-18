@@ -3,7 +3,7 @@ import ArtWork from "../pages/ArtWork";
 import Profiles from "../pages/Profiles";
 import MenuTabs from "../components/MenuTabs";
 import "../asset/main.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 function Feed({}) {
   return (

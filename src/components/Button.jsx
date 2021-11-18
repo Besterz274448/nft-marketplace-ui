@@ -1,7 +1,7 @@
 import React from "react";
 import "../asset/components.css";
 
-function Button({ name, width = "70%", sx = {}, onClick = () => {} }) {
+function Button({ name, width = "70%", sx = {}, onClick = () => {}, type = "button" }) {
   const ButtonStyle = {
     color: "white",
     fontWeight: "bold",
@@ -15,7 +15,7 @@ function Button({ name, width = "70%", sx = {}, onClick = () => {} }) {
     ...sx,
   };
   return (
-    <button className="button" onClick={onClick} style={ButtonStyle}>
+    <button type={type} className="button" onClick={onClick} style={ButtonStyle}>
       {name}
     </button>
   );

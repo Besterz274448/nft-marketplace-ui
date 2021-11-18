@@ -191,7 +191,7 @@
 }
 
 .artworkdetail-button-container {
-  margin: 0px 60px;
+  margin: 0px 20px;
   padding: 10px;
   position: relative;
   margin-top: -110px;
@@ -217,6 +217,41 @@
   padding: 10px 25px;
   font-size: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.artworkdetail-container {
+  margin: 0px 40px;
+  align-items: center;
+}
+
+.artworkdetail-half-container {
+  flex: 0.5;
+}
+
+.artworkdetail-half-container > h6 , p {
+  font-size: 16px;
+  margin:2% 0px;
+
+}
+
+.artworkdetail-image-name{
+  font-size: 40px;
+}
+
+.createasset-root{
+  margin:4rem auto;
+  width:100ch;
+  line-height: 1rem;
+}
+
+
+.createasset-root-required{
+  color: red;
+}
+
+.createasset-root > textarea{
+  resize: none;
+  height: 100px;
 }
 
 @media only screen and (max-width: 600px) {
