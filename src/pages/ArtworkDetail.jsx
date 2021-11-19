@@ -4,14 +4,14 @@ import ArtistContract from "../components/ArtistContract";
 import ShareIcon from "@mui/icons-material/Share";
 
 function ArtworkDetail({
-  background = "https://thaipublica.org/wp-content/uploads/2013/06/edward-snowden.jpg",
+  image_src = "https://thaipublica.org/wp-content/uploads/2013/06/edward-snowden.jpg",
   image_name = "Ring Lake Rose",
   image_description = "Digital 3D C4D Still Render By David Stenbeck @dovneon",
 }) {
   return (
     <div className="artworkdetail-root ">
       <div className="artworkdetail-img">
-        <img src={background} />
+        <img src={image_src} alt="artworks_image" />
       </div>
       <div className="artworkdetail-button-container flex">
         <ArtistContract />

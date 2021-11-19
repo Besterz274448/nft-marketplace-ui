@@ -4,14 +4,10 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
 import MenuTabs from "../components/MenuTabs";
 import Button from "../components/Button";
-import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
-import ImageCard from "../components/ImageCard";
-import NavBar from "../components/NavBar";
 import UserItem from "../components/UserItem";
 import { Routes, Route } from "react-router-dom";
-import ArtWork from "./ArtWork";
 
 const FollowDetail = ({ amount, text }) => {
   return (
@@ -40,13 +36,14 @@ function UserProfile({
     <>
       <div className="userprofile-root ">
         <div>
-          <img src={background} width="100%" height="350px" />
+          <img src={background} width="100%" height="350px" alt="profile-background" />
         </div>
         <div className="userprofile-contract-container flex">
           <img
             className="userprofile-contract-avatar"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQZBSvZWBFq9CwBaDVQr-pgZlnhsrDrzsqDQ&usqp=CAU"
             width="200px"
+            alt="userprofile-avatar"
           />
           <button className="userprofile-contract-button b">Collected By</button>
         </div>

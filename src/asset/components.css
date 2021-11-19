@@ -7,9 +7,9 @@
   font-weight: bold;
 }
 
-.p0{
-  padding:0;
-  margin:0;
+.p0 {
+  padding: 0;
+  margin: 0;
 }
 
 .navlink {
@@ -175,9 +175,6 @@
   color: rgba(0, 0, 0, 0.4);
 }
 
-.menuTabs-tabs-container {
-}
-
 .menuTabs-root {
   justify-content: space-between;
 }
@@ -313,11 +310,65 @@
     rgba(0, 193, 145, 1) 30%,
     rgba(1, 140, 213, 1) 60%
   );
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .artist-detail-description {
   margin-top: 10px;
   font-size: 14px;
+}
+
+.uploadimage-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.uploadimage-dropzone {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20 px;
+  border-width: 2 px;
+  border-radius: 2 px;
+  border-color: #eeeeee;
+  border-style: dashed;
+  color: #bdbdbd;
+  outline: none;
+  transition: border 0.24s;
+}
+
+.uploadimage-dropzone:hover{
+  background-color: #fafafa;
+}
+
+.uploadimage-preview {
+  position: absolute;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+}
+
+.uploadimage-resetButton {
+  position: absolute;
+  z-index: 150;
+  top: 0;
+  right: 0;
+  background-color: white;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 1000px) {
+  .uploadimage-container {
+    width: 100%;
+  }
 }

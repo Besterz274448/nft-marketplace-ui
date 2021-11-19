@@ -26,12 +26,12 @@ function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0
     border: "none",
     borderRadius: "30px",
     cursor: "pointer",
-    padding: border == "none" ? "5px 0px" : "10px 10px",
+    padding: border === "none" ? "5px 0px" : "10px 10px",
     ...sx,
   };
   return (
     <div className={classes}>
-      <button className={border == "none" ? "" : "button"} style={ButtonStyle} onClick={handleClick}>
+      <button className={border === "none" ? "" : "button"} style={ButtonStyle} onClick={handleClick}>
         <span style={{ display: "inline-block" }}>
           <Avatar
             alt="Remy Sharp"

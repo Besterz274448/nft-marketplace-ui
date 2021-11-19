@@ -5,7 +5,7 @@ import MenuTabs from "../components/MenuTabs";
 import "../asset/main.css";
 import { Routes, Route } from "react-router-dom";
 
-function Feed({}) {
+function Feed() {
   return (
       //get amount of data
     <div className="feed-content main-content">

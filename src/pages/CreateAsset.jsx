@@ -5,12 +5,35 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "../components/Button";
+import UploadImage from "../components/UploadImage";
 
 function CreateAsset() {
   const [age, setAge] = React.useState(10);
+  const [img, setImg] = React.useState({
+    src: "",
+    name: "",
+    type: "",
+  });
 
   const handleChange = (event) => {
     setAge(event.target.value);
+  };
+
+  const handleImg = async (files) => {
+    let newSrc = {};
+    newSrc.name = files[0].name;
+    newSrc.type = files[0].type;
+    newSrc.src = await getDataImage(files[0]);
+    console.log(newSrc)
+    setImg(newSrc);
+  };
+
+  const resetImg = () => {
+    setImg({
+      src: "",
+      name: "",
+      type: "",
+    });
   };
 
   async function getDataImage(file) {
@@ -24,40 +47,28 @@ function CreateAsset() {
 
   const createAsset = async (e) => {
     e.preventDefault();
-    //reading image file
-    let src = await getDataImage(e.target["asset-image"].files[0]);
-
-    console.log(e);
-    console.log(src);
-
-    if(e.target["asset-image"].files[0].type === "image/jpeg"){
-    }
     //set value;
-    let image = "";
     let newAsset = {
       name: e.target["asset-name"].value,
       description: e.target["asset-description"].value,
       imageName: e.target["asset-image"].files[0].name,
       imageType: e.target["asset-image"].files[0].type,
     };
-
     console.log(newAsset);
     //adding data to db;
     //if http.statuscode === 200 > add image file to s3
   };
 
-  //useEffect must call userCollection from backend
   return (
     <div className="createasset-root">
       <form onSubmit={createAsset}>
         <h1>Create New Item</h1>
         <h4>
-          Image<span className="createasset-root-required">*</span>
+          Image<span className="createasset-required">*</span>
         </h4>
-        {/* drop zone */}
-        <input id="asset-image" type="file" multiple accept="image/*" required></input>
+        <UploadImage id="" img={img} handleImg={handleImg} resetImg={resetImg} />
         <h4>
-          Name<span className="createasset-root-required">*</span>
+          Name<span className="createasset-required">*</span>
         </h4>
         <TextField
           id="asset-name"
@@ -77,7 +88,6 @@ function CreateAsset() {
           maxRows={4}
           minRows={4}
           placeholder="Provide a detailed description of your item"
-          fullWidth
           size="small"
           variant="outlined"
         />
@@ -98,8 +108,14 @@ function CreateAsset() {
         </div>
         <Button
           name="Submit"
-          sx={{ width: "fit-content", padding: "10px 20px", backgroundColor: "rgb(100,100,200)" }}
+          sx={{
+            width: "fit-content",
+            padding: "10px 20px",
+            marginTop: "10px",
+            backgroundColor: img.src === "" ? "rgba(0,0,0,0.1)" : "rgb(100,100,200)",
+          }}
           type="submit"
+          disable={img.src === "" ? true:false}
         />
       </form>
     </div>

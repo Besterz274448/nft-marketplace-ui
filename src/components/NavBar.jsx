@@ -138,7 +138,7 @@ function NavBar({}) {
                 name={
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <span>Metamask</span>
-                    <img src={MetaMaskLogo} width="20px"></img>
+                    <img src={MetaMaskLogo} width="20px" alt="metamask-logo"></img>
                   </div>
                 }
               />

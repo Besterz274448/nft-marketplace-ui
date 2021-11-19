@@ -240,12 +240,12 @@
 
 .createasset-root{
   margin:4rem auto;
-  width:100ch;
+  width:70%;
   line-height: 1rem;
 }
 
 
-.createasset-root-required{
+.createasset-required{
   color: red;
 }
 
