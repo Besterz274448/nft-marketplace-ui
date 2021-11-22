@@ -12,12 +12,12 @@ import {useLocation} from "react-router-dom";
 
 const style = {
   position: "absolute",
-  top: "30%",
+  top: "40%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 300,
+  width: 270,
   bgcolor: "background.paper",
-  border: "1px solid rgba(0,0,0,0.4)",
+  border: "1px solid rgba(0,0,0,0.1)",
   borderRadius: "10%",
   boxShadow: 24,
   textAlign: "center",
@@ -108,13 +108,13 @@ function NavBar({}) {
           </PhoneMenu>
         </div>
 
-        <div //blackdrop
+        <div //backdrop
           className="Backdrop"
           onClick={handleInputClose}
           style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
       </div>
       <>
-        <Modal //modal connet wallet
+        <Modal //modal connect wallet
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -123,10 +123,10 @@ function NavBar({}) {
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Connect your wallet.
             </Typography>
-            <Typography id="modal-modal-description1" sx={{ mt: 2, fontSize: "12px" }}>
+            <Typography id="modal-modal-description1" sx={{ m: 2, fontSize: "12px" }}>
               By connecting your wallet, you agree to our Terms of Service and our Privacy Policy.
             </Typography>
-            <Typography id="modal-modal-description2" sx={{ mt: 2, fontSize: "12px" }}>
+            <Typography id="modal-modal-description2" sx={{ m: 2, fontSize: "12px" }}>
               <Button
                 width="100%"
                 sx={{

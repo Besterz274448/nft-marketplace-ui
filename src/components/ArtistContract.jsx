@@ -4,7 +4,13 @@ import Avatar from "@mui/material/Avatar";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 
-function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0,0,0.05)",classes="" }) {
+function ArtistContract({
+  width,
+  sx = {},
+  contract,
+  border = "1px solid rgba(0,0,0,0.05)",
+  classes = "",
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -30,8 +36,10 @@ function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0
     ...sx,
   };
   return (
-    <div className={classes}>
-      <button className={border === "none" ? "" : "button"} style={ButtonStyle} onClick={handleClick}>
+    <div className="contract-container">
+      <button
+        className={border === "none" ? "contract-button" : "button contract-button"}
+        style={ButtonStyle}>
         <span style={{ display: "inline-block" }}>
           <Avatar
             alt="Remy Sharp"
@@ -41,17 +49,16 @@ function ArtistContract({ width, sx = {}, contract, border = "1px solid rgba(0,0
         </span>
         <span>@userContract</span>
       </button>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}>
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-      </Popover>
+      {/* <div className="contract-detail">
+        <div className="flex">
+          <Avatar
+            alt="Remy Sharp"
+            src="/static/images/avatar/1.jpg"
+            sx={{ width: 24, height: 24 }}
+          />
+        </div>
+        <h1></h1>
+      </div> */}
     </div>
   );
 }

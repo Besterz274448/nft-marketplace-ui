@@ -24,7 +24,6 @@ function CreateAsset() {
     newSrc.name = files[0].name;
     newSrc.type = files[0].type;
     newSrc.src = await getDataImage(files[0]);
-    console.log(newSrc)
     setImg(newSrc);
   };
 
@@ -51,10 +50,41 @@ function CreateAsset() {
     let newAsset = {
       name: e.target["asset-name"].value,
       description: e.target["asset-description"].value,
-      imageName: e.target["asset-image"].files[0].name,
-      imageType: e.target["asset-image"].files[0].type,
+      imageType: img.type,
+      imageName: img.name,
     };
-    console.log(newAsset);
+    
+    //use state auth from main
+    const auth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYmIxNjk3YWUtM2VmNC00OWZjLWIxYWEtOTE3NDc1M2NhZTliIiwicHVibGljQWRkcmVzcyI6IjB4NWZGN0Y2OTk4YzM3ZmY4MWM5MTE5OUFhOEUzNTBlNDBlMTYxQTM4ciJ9LCJpYXQiOjE2Mzc0NzMxMzQsImV4cCI6MTYzNzQ3NjczNH0.NiO0ydonZJLW5LAVgRUs6ebgolR6x2ISDAAodMw0n74";
+    const response = await fetch("https://ru-nft-market.tech/products", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: auth,
+      },
+      body: JSON.stringify(newAsset),
+    })
+      .then((res) => res.json())
+      .catch((err) => {
+        window.alert(err);
+      });
+
+    if (response.statusCode === 201) {
+      fetch(response.data.s3Url, {
+        method: "PUT",
+        headers: {
+          Accept: "*/*",
+          "Content-type": img.type,
+        },
+        body: img.src,
+      })
+        .then((res) => res.status)
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    }
+
     //adding data to db;
     //if http.statuscode === 200 > add image file to s3
   };
@@ -115,7 +145,7 @@ function CreateAsset() {
             backgroundColor: img.src === "" ? "rgba(0,0,0,0.1)" : "rgb(100,100,200)",
           }}
           type="submit"
-          disable={img.src === "" ? true:false}
+          disable={img.src === "" ? true : false}
         />
       </form>
     </div>
