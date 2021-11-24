@@ -10,21 +10,22 @@ import ipfs from "../config/ipfs";
 
 function CreateAsset() {
   const [age, setAge] = React.useState(10);
+  const [disableSubmit, setDisable] = React.useState(true);
   const [img, setImg] = React.useState({
     src: "",
     name: "",
     type: "",
   });
 
-  function _arrayBufferToBase64( buffer ) {
-    var binary = '';
-    var bytes = new Uint8Array( buffer );
+  function _arrayBufferToBase64(buffer) {
+    var binary = "";
+    var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
     for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
+      binary += String.fromCharCode(bytes[i]);
     }
-    return window.btoa( binary );
-}
+    return window.btoa(binary);
+  }
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -36,6 +37,7 @@ function CreateAsset() {
     newSrc.type = files[0].type;
     newSrc.src = await getDataImage(files[0]);
     setImg(newSrc);
+    setDisable(false);
   };
 
   const resetImg = () => {
@@ -44,6 +46,7 @@ function CreateAsset() {
       name: "",
       type: "",
     });
+    setDisable(true);
   };
 
   async function getDataImage(file) {
@@ -57,7 +60,7 @@ function CreateAsset() {
 
   const createAsset = async (e) => {
     e.preventDefault();
-
+    setDisable(true);
     const cid = await ipfs.add(img.src);
     const source = await ipfs.add(
       {
@@ -118,10 +121,12 @@ function CreateAsset() {
         body: _arrayBufferToBase64(img.src),
       })
         .then((res) => res.status)
-        .then((res) => console.log("put image to s3 : " + res))
+        .then((res) => {
+          console.log("put image to s3 : " + res);
+          setDisable(false);
+        })
         .catch((err) => console.log(err));
     }
-
   };
 
   return (
@@ -177,10 +182,10 @@ function CreateAsset() {
             width: "fit-content",
             padding: "10px 20px",
             marginTop: "10px",
-            backgroundColor: img.src === "" ? "rgba(0,0,0,0.1)" : "rgb(100,100,200)",
+            backgroundColor: disableSubmit ? "rgba(0,0,0,0.1)" : "rgb(100,100,200)",
           }}
           type="submit"
-          disable={img.src === "" ? true : false}
+          disable={disableSubmit}
         />
       </form>
     </div>
