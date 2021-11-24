@@ -6,6 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "../components/Button";
 import UploadImage from "../components/UploadImage";
+import ipfs from "../config/ipfs";
 
 function CreateAsset() {
   const [age, setAge] = React.useState(10);
@@ -14,6 +15,16 @@ function CreateAsset() {
     name: "",
     type: "",
   });
+
+  function _arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}
 
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -39,24 +50,47 @@ function CreateAsset() {
     let result_base64 = await new Promise((resolve) => {
       let fileReader = new FileReader();
       fileReader.onload = (e) => resolve(fileReader.result);
-      fileReader.readAsDataURL(file);
+      fileReader.readAsArrayBuffer(file);
     });
     return result_base64;
   }
 
   const createAsset = async (e) => {
     e.preventDefault();
-    //set value;
+
+    const cid = await ipfs.add(img.src);
+    const source = await ipfs.add(
+      {
+        path: "metadata.json",
+        content: JSON.stringify({
+          name: img.name,
+          description: e.target["asset-description"].value,
+          image: `https://ipfs.io/ipfs/${cid.path}`,
+        }),
+      },
+      {
+        wrapWithDirectory: true,
+      }
+    );
+
     let newAsset = {
       name: e.target["asset-name"].value,
       description: e.target["asset-description"].value,
-      imageType: img.type,
-      imageName: img.name,
+      fileName: img.name,
+      fileType: img.type,
+      cid: cid.path,
+      collectionId: "306af3fa-9d28-472b-8c4e-961749f49ea4",
+      collectionName: "Potato",
+      metadata: source.cid.toString(),
     };
-    
+
+    console.log(newAsset);
+
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiMjljM2I3MGMtZmNkOC00MWM4LThlYTMtZWFmZDU5NmRhODA5IiwicHVibGljQWRkcmVzcyI6IjEyIn0sImlhdCI6MTYzNzc2NDc4OCwiZXhwIjoxNjM3NzY4Mzg4fQ.cjECIkUzULdO5BkA_oekA5qeHzzAqUDOgF4wxgBh3Ng";
     //use state auth from main
-    const auth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiYmIxNjk3YWUtM2VmNC00OWZjLWIxYWEtOTE3NDc1M2NhZTliIiwicHVibGljQWRkcmVzcyI6IjB4NWZGN0Y2OTk4YzM3ZmY4MWM5MTE5OUFhOEUzNTBlNDBlMTYxQTM4ciJ9LCJpYXQiOjE2Mzc0NzMxMzQsImV4cCI6MTYzNzQ3NjczNH0.NiO0ydonZJLW5LAVgRUs6ebgolR6x2ISDAAodMw0n74";
-    const response = await fetch("https://ru-nft-market.tech/products", {
+    const auth = `Bearer ${token}`;
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -71,6 +105,9 @@ function CreateAsset() {
         window.alert(err);
       });
 
+    console.log(response);
+    //adding data to db;
+    //if http.statuscode === 200 > add image file to s3
     if (response.statusCode === 201) {
       fetch(response.data.s3Url, {
         method: "PUT",
@@ -78,15 +115,13 @@ function CreateAsset() {
           Accept: "*/*",
           "Content-type": img.type,
         },
-        body: img.src,
+        body: _arrayBufferToBase64(img.src),
       })
         .then((res) => res.status)
-        .then((res) => console.log(res))
+        .then((res) => console.log("put image to s3 : " + res))
         .catch((err) => console.log(err));
     }
 
-    //adding data to db;
-    //if http.statuscode === 200 > add image file to s3
   };
 
   return (
@@ -96,7 +131,7 @@ function CreateAsset() {
         <h4>
           Image<span className="createasset-required">*</span>
         </h4>
-        <UploadImage id="" img={img} handleImg={handleImg} resetImg={resetImg} />
+        <UploadImage id="asset-image" img={img} handleImg={handleImg} resetImg={resetImg} />
         <h4>
           Name<span className="createasset-required">*</span>
         </h4>
