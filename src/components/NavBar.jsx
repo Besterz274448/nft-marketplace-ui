@@ -43,7 +43,7 @@ const searchPhoneStyle = {
 
 let web3 = undefined; // Will hold the web3 instance
 
-function NavBar({ onLoggedIn, auth }) {
+function NavBar({ onLoggedIn, auth , handleStatus , handleLoggedOut }) {
   const [selectInput, setSelect] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false); // Loading button state
@@ -96,7 +96,7 @@ function NavBar({ onLoggedIn, auth }) {
 
   const handleClick = async () => {
     if (!window.ethereum) {
-      window.alert("Please install MetaMask first.");
+      handleStatus("error","Please install MetaMask first.");
       return;
     }
 
@@ -173,14 +173,14 @@ function NavBar({ onLoggedIn, auth }) {
         <div className="navbar-button">
           {!auth && (
             <Button //wallet button
-              onClick={handleOpen}
+              onClick={handleClick}
               width="150%"
               sx={{
                 // backgroundColor:buttonColor,
                 // color:buttonColor === 'black' ? "white" : "black",
                 padding: "17.5px 14px",
               }}
-              name="Connect Wallet"
+              name={loading ? <CircularProgress size={20} /> : "Connect Wallet"}
             />
           )}
         </div>
@@ -195,7 +195,7 @@ function NavBar({ onLoggedIn, auth }) {
           onClick={handleInputClose}
           style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
       </div>
-      <>
+      {/* <>
         <Modal //modal connect wallet
           open={open}
           onClose={handleClose}
@@ -233,7 +233,6 @@ function NavBar({ onLoggedIn, auth }) {
                     )}
                   </div>
                 }
-                onClick={handleClick}
               />
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: "12px" }}>
@@ -244,7 +243,7 @@ function NavBar({ onLoggedIn, auth }) {
             </Typography>
           </Box>
         </Modal>
-      </>
+      </> */}
     </>
   );
 }

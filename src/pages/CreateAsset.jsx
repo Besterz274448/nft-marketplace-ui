@@ -8,7 +8,7 @@ import Button from "../components/Button";
 import UploadImage from "../components/UploadImage";
 import ipfs from "../config/ipfs";
 
-function CreateAsset() {
+function CreateAsset({ auth }) {
   const [age, setAge] = React.useState(10);
   const [disableSubmit, setDisable] = React.useState(true);
   const [img, setImg] = React.useState({
@@ -89,17 +89,15 @@ function CreateAsset() {
 
     console.log(newAsset);
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiMjljM2I3MGMtZmNkOC00MWM4LThlYTMtZWFmZDU5NmRhODA5IiwicHVibGljQWRkcmVzcyI6IjEyIn0sImlhdCI6MTYzNzc2NDc4OCwiZXhwIjoxNjM3NzY4Mzg4fQ.cjECIkUzULdO5BkA_oekA5qeHzzAqUDOgF4wxgBh3Ng";
+    const token = `Bearer ${auth}`;
     //use state auth from main
-    const auth = `Bearer ${token}`;
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`, {
       method: "POST",
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: auth,
+        Authorization: token,
       },
       body: JSON.stringify(newAsset),
     })
@@ -107,10 +105,7 @@ function CreateAsset() {
       .catch((err) => {
         window.alert(err);
       });
-
     console.log(response);
-    //adding data to db;
-    //if http.statuscode === 200 > add image file to s3
     if (response.statusCode === 201) {
       fetch(response.data.s3Url, {
         method: "PUT",
