@@ -1,15 +1,13 @@
 import React from "react";
 import "../asset/main.css";
 import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Button from "../components/Button";
 import UploadImage from "../components/UploadImage";
 import ipfs from "../config/ipfs";
+import { mintToken } from "../utils/utility";
 
 function CreateAsset({ auth }) {
-  const [age, setAge] = React.useState(10);
+  const [collection, setSelectedColletction] = React.useState("");
   const [disableSubmit, setDisable] = React.useState(true);
   const [img, setImg] = React.useState({
     src: "",
@@ -28,7 +26,7 @@ function CreateAsset({ auth }) {
   }
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setSelectedColletction(event.target.value);
   };
 
   const handleImg = async (files) => {
@@ -59,6 +57,8 @@ function CreateAsset({ auth }) {
   }
 
   const createAsset = async (e) => {
+    //waiting for add condition check window.ethereum allowed
+
     e.preventDefault();
     setDisable(true);
     const cid = await ipfs.add(img.src);
@@ -76,52 +76,56 @@ function CreateAsset({ auth }) {
       }
     );
 
-    let newAsset = {
-      name: e.target["asset-name"].value,
-      description: e.target["asset-description"].value,
-      fileName: img.name,
-      fileType: img.type,
-      cid: cid.path,
-      collectionId: "306af3fa-9d28-472b-8c4e-961749f49ea4",
-      collectionName: "Potato",
-      metadata: source.cid.toString(),
-    };
+    console.log(source);
+    mintToken(source.cid.toString());
+    // mintToken("test");
 
-    console.log(newAsset);
+    // let newAsset = {
+    //   name: e.target["asset-name"].value,
+    //   description: e.target["asset-description"].value,
+    //   fileName: img.name,
+    //   fileType: img.type,
+    //   cid: cid.path,
+    //   collectionId: "306af3fa-9d28-472b-8c4e-961749f49ea4",
+    //   collectionName: "Potato",
+    //   metadata: source.cid.toString(),
+    // };
 
-    const token = `Bearer ${auth}`;
-    //use state auth from main
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(newAsset),
-    })
-      .then((res) => res.json())
-      .catch((err) => {
-        window.alert(err);
-      });
-    console.log(response);
-    if (response.statusCode === 201) {
-      fetch(response.data.s3Url, {
-        method: "PUT",
-        headers: {
-          Accept: "*/*",
-          "Content-type": img.type,
-        },
-        body: _arrayBufferToBase64(img.src),
-      })
-        .then((res) => res.status)
-        .then((res) => {
-          console.log("put image to s3 : " + res);
-          setDisable(false);
-        })
-        .catch((err) => console.log(err));
-    }
+    // console.log(newAsset);
+
+    // const token = `Bearer ${auth}`;
+    // //use state auth from main
+    // const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`, {
+    //   method: "POST",
+    //   mode: "cors",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //     Authorization: token,
+    //   },
+    //   body: JSON.stringify(newAsset),
+    // })
+    //   .then((res) => res.json())
+    //   .catch((err) => {
+    //     window.alert(err);
+    //   });
+    // console.log(response);
+    // if (response.statusCode === 201) {
+    //   fetch(response.data.s3Url, {
+    //     method: "PUT",
+    //     headers: {
+    //       Accept: "*/*",
+    //       "Content-type": img.type,
+    //     },
+    //     body: _arrayBufferToBase64(img.src),
+    //   })
+    //     .then((res) => res.status)
+    //     .then((res) => {
+    //       console.log("put image to s3 : " + res);
+    //       setDisable(false);
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
   };
 
   return (
@@ -157,20 +161,7 @@ function CreateAsset({ auth }) {
           variant="outlined"
         />
         <h4>Collection</h4>
-        <div>
-          <FormControl fullWidth>
-            <Select
-              labelId="demo-simple-select-autowidth-label"
-              id="demo-simple-select-autowidth"
-              value={age}
-              onChange={handleChange}
-              autoWidth>
-              <MenuItem value={10}>Twenty</MenuItem>
-              <MenuItem value={21}>Twenty one</MenuItem>
-              <MenuItem value={22}>Twenty one and a half</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
+        <div></div>
         <Button
           name="Submit"
           sx={{
@@ -183,6 +174,7 @@ function CreateAsset({ auth }) {
           disable={disableSubmit}
         />
       </form>
+      <div style={{ height: "500px" }}></div>
     </div>
   );
 }

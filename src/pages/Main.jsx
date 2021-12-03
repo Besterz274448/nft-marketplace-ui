@@ -23,7 +23,6 @@ function Main() {
     // Access token is stored in localstorage
     const ls = window.localStorage.getItem(LS_KEY);
     const token = ls && JSON.parse(ls);
-    console.log(token);
     setAuth(token);
   }, []);
 

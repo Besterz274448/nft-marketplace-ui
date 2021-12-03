@@ -43,7 +43,7 @@ const searchPhoneStyle = {
 
 let web3 = undefined; // Will hold the web3 instance
 
-function NavBar({ onLoggedIn, auth , handleStatus , handleLoggedOut }) {
+function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
   const [selectInput, setSelect] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false); // Loading button state
@@ -63,7 +63,7 @@ function NavBar({ onLoggedIn, auth , handleStatus , handleLoggedOut }) {
 
   const handleAuthenticate = ({ publicAddress, signature }) => {
     return fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
-      body: JSON.stringify({ publicAddress, signature }),
+      body: JSON.stringify({ publicAddress, signature, forceTest: true }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -96,7 +96,7 @@ function NavBar({ onLoggedIn, auth , handleStatus , handleLoggedOut }) {
 
   const handleClick = async () => {
     if (!window.ethereum) {
-      handleStatus("error","Please install MetaMask first.");
+      handleStatus("error", "Please install MetaMask first.");
       return;
     }
 
@@ -112,6 +112,8 @@ function NavBar({ onLoggedIn, auth , handleStatus , handleLoggedOut }) {
         return;
       }
     }
+
+    console.log(web3.eth);
 
     const coinbase = await web3.eth.getCoinbase();
     if (!coinbase) {
