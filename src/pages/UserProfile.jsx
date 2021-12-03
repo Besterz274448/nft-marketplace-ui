@@ -4,11 +4,10 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
 import MenuTabs from "../components/MenuTabs";
 import Button from "../components/Button";
-import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
-import ImageCard from "../components/ImageCard";
-import NavBar from "../components/NavBar";
+import UserItem from "../components/UserItem";
+import { Routes, Route } from "react-router-dom";
 
 const FollowDetail = ({ amount, text }) => {
   return (
@@ -31,21 +30,24 @@ function UserProfile({
     navigator.clipboard.writeText(copyText.innerHTML);
     alert("Copied the text: " + copyText.innerHTML);
   };
+
+  const id = "test23"
   return (
     <>
       <div className="userprofile-root ">
         <div>
-          <img src={background} width="100%" height="350px" />
+          <img src={background} width="100%" height="350px" alt="profile-background" />
         </div>
         <div className="userprofile-contract-container flex">
           <img
             className="userprofile-contract-avatar"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQZBSvZWBFq9CwBaDVQr-pgZlnhsrDrzsqDQ&usqp=CAU"
             width="200px"
+            alt="userprofile-avatar"
           />
           <button className="userprofile-contract-button b">Collected By</button>
         </div>
-        <div className="userprofile-description-container flex">
+        <div className="userprofile-description-container">
           <div className="userprofile-description-text-container">
             <div className="userprofile-wallet-container flex">
               <div className="userprofile-user-id">#{userId}</div>
@@ -63,7 +65,7 @@ function UserProfile({
               </div>
             </div>
             <div className="userprofile-user-contractName">{username}</div>
-            <div>
+            <div className="userprofile-user-contractAddress">
               <span className="userprofile-user-contractAddress">{contractAddress}</span>
             </div>
             <div className="userprofile-follow">
@@ -84,7 +86,7 @@ function UserProfile({
             </div>
             <div className="userprofile-followedBy">
               <div className="b">Folllowed By</div>
-              <div className="flex">
+              <div className="userprofile-avatar-followed flex">
                 <div className="avatar-followed">
                   <Avatar
                     alt="Remy Sharp"
@@ -141,30 +143,16 @@ function UserProfile({
             {/* รอแก้ โลจิค menutabs << ใช้แบบ เปลี่ยน component ไม่ได้ */}
             <MenuTabs
               menu={[
-                { name: "Created", to: "/feed/profiles", count: 32 },
-                { name: "Owned", to: "/feed/artworks", count: 5 },
+                { name: "Created", to: `/user/${id}/created`, count: 32 },
+                { name: "Owned", to: `/user/${id}/owned`, count: 5 },
               ]}
               sortComponent={<></>}
             />
             <div style={{ marginTop: "1%" }}></div>
-            <Grid alignItems="center" rowGap={3} container spacing={2}>
-              <Grid item lg={4} md={6} sm={6} xs={11}>
-                <ImageCard
-                  src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-                  name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-                  contract="moisesdsanabria"
-                  price={1.0}
-                />
-              </Grid>
-              <Grid item lg={4} md={6} sm={6} xs={11}>
-                <ImageCard
-                  src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-                  name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-                  contract="moisesdsanabria"
-                  price={1.0}
-                />
-              </Grid>
-            </Grid>
+            <Routes>
+              <Route exact="true" path="/:id/created" element={<UserItem />} />
+              <Route exact="true" path="/:id/owned" element={<UserItem />} />
+            </Routes>
           </div>
         </div>
       </div>

@@ -1,22 +1,26 @@
 import React from "react";
 import "../asset/navbar.css";
 import MetaMaskLogo from "../asset/svg/metamasklogo.png";
+import AdorableLogo from "../asset/svg/Adorable-Panda.svg";
 import Button from "./Button";
 import { NavLink } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import PhoneMunu from "./PhoneMunu";
+import PhoneMenu from "./PhoneMenu";
+import Web3 from "web3";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useLocation } from "react-router-dom";
 
 const style = {
   position: "absolute",
-  top: "30%",
+  top: "40%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 250,
+  width: 270,
   bgcolor: "background.paper",
-  border: "1px solid rgba(0,0,0,0.4)",
-  borderRadius: "24px",
+  border: "1px solid rgba(0,0,0,0.1)",
+  borderRadius: "10%",
   boxShadow: 24,
   textAlign: "center",
   p: 5,
@@ -37,13 +41,105 @@ const searchPhoneStyle = {
   p: 5,
 };
 
-function NavBar() {
+let web3 = undefined; // Will hold the web3 instance
+
+function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
   const [selectInput, setSelect] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false); // Loading button state
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleInputOpen = () => setSelect(true);
   const handleInputClose = () => setSelect(false);
+
+  // const location = useLocation()
+  // const [buttonColor,setButtonColor] = React.useState('black');
+
+  // React.useEffect(() => {
+  //   let path = location.pathname.split('/')[1];
+  //   setButtonColor(path === 'user' ? 'white' : 'black');
+  // }, [location])
+
+  const handleAuthenticate = ({ publicAddress, signature }) => {
+    return fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
+      body: JSON.stringify({ publicAddress, signature, forceTest: true }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }).then((response) => response.json());
+  };
+
+  const handleSignMessage = async ({ publicAddress, nonce }) => {
+    try {
+      const signature = await web3?.eth.personal.sign(
+        `I am signing my one-time nonce: ${nonce}`,
+        publicAddress,
+        "" // MetaMask will ignore the password argument here
+      );
+      return { publicAddress, signature };
+    } catch (err) {
+      throw new Error("You need to sign the message to be able to log in.");
+    }
+  };
+
+  const handleSignup = (publicAddress) => {
+    return fetch(`${process.env.REACT_APP_BACKEND_URL}/users`, {
+      body: JSON.stringify({ publicAddress, username: "" }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }).then((response) => response.json());
+  };
+
+  const handleClick = async () => {
+    if (!window.ethereum) {
+      handleStatus("error", "Please install MetaMask first.");
+      return;
+    }
+
+    if (!web3) {
+      try {
+        // Request account access if needed
+        await window.ethereum.enable();
+        // We don't know window.web3 version, so we use our own instance of Web3
+        // with the injected provider given by MetaMask
+        web3 = new Web3(window.ethereum);
+      } catch (error) {
+        window.alert("You need to allow MetaMask.");
+        return;
+      }
+    }
+
+    console.log(web3.eth);
+
+    const coinbase = await web3.eth.getCoinbase();
+    if (!coinbase) {
+      window.alert("Please activate MetaMask first.");
+      return;
+    }
+
+    const publicAddress = coinbase.toLowerCase();
+    setLoading(true);
+
+    try {
+      let response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/users?publicAddress=${publicAddress}`
+      );
+      let user = await response.json();
+      let userData = user.data !== null ? user : await handleSignup(publicAddress);
+      let signMessage = await handleSignMessage(userData.data);
+      let token = await handleAuthenticate(signMessage);
+      onLoggedIn(token.data);
+      setOpen(false);
+    } catch (err) {
+      window.alert(err);
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <div className="navbar-root">
@@ -51,11 +147,7 @@ function NavBar() {
           className="navbar-logo"
           style={{ display: selectInput && window.innerWidth < 800 ? "none" : "flex" }}>
           <NavLink to="/">
-            <img
-              height="55px"
-              src="data:image/png;base64,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"
-              alt="logo"
-            />
+            <img height="55px" src={AdorableLogo} alt="logo" />
           </NavLink>
         </div>
         <div className={"navbar-searchfield-container"}>
@@ -81,28 +173,32 @@ function NavBar() {
           </div>
         </div>
         <div className="navbar-button">
-          <Button //wallet button
-            onClick={handleOpen}
-            width="150%"
-            sx={{
-              padding: "17.5px 14px",
-            }}
-            name="Connect Wallet"
-          />
+          {!auth && (
+            <Button //wallet button
+              onClick={handleClick}
+              width="150%"
+              sx={{
+                // backgroundColor:buttonColor,
+                // color:buttonColor === 'black' ? "white" : "black",
+                padding: "17.5px 14px",
+              }}
+              name={loading ? <CircularProgress size={20} /> : "Connect Wallet"}
+            />
+          )}
         </div>
-        <div className="nevbar-phone">
-          <PhoneMunu name="Foundaton" color='#f0f'>
+        <div className="navbar-phone">
+          <PhoneMenu name="Foundaton" color="#f0f">
             <p>Phone Menu</p>
-          </PhoneMunu>
+          </PhoneMenu>
         </div>
 
-        <div //blackdrop
+        <div //backdrop
           className="Backdrop"
           onClick={handleInputClose}
           style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
       </div>
-      <>
-        <Modal //modal connet wallet
+      {/* <>
+        <Modal //modal connect wallet
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -111,10 +207,10 @@ function NavBar() {
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Connect your wallet.
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: "12px" }}>
+            <Typography id="modal-modal-description1" sx={{ m: 2, fontSize: "12px" }}>
               By connecting your wallet, you agree to our Terms of Service and our Privacy Policy.
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: "12px" }}>
+            <Typography id="modal-modal-description2" sx={{ m: 2, fontSize: "12px" }}>
               <Button
                 width="100%"
                 sx={{
@@ -124,9 +220,19 @@ function NavBar() {
                     "linear-gradient(90deg, rgba(244,93,47,1) 0%, rgba(254,209,119,1) 100%)",
                 }}
                 name={
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span>Metamask</span>
-                    <img src={MetaMaskLogo} width="20px"></img>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: loading ? "center" : "space-between",
+                    }}>
+                    {loading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      <>
+                        <span>Metamask</span>
+                        <img src={MetaMaskLogo} width="20px" alt="metamask-logo"></img>
+                      </>
+                    )}
                   </div>
                 }
               />
@@ -139,7 +245,7 @@ function NavBar() {
             </Typography>
           </Box>
         </Modal>
-      </>
+      </> */}
     </>
   );
 }

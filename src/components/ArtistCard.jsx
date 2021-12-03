@@ -10,12 +10,12 @@ function ArtistCard({
   return (
     <div className="image-card-container">
       <div className="artist-card-container">
-        <img className="artist-card-img" src={src} alt="imgCard"></img>
+        <img className="artist-card-img" src={src} alt="artistCardImage"></img>
       </div>
       <div className="artist-detail-container">
         <div className="artist-detail-avatar-box">
           <div>
-            <img src={src} />
+            <img src={src} alt="artistCardAvatar"/>
           </div>
         </div>
         <div className="artist-detail-name b">{name}</div>

@@ -10,7 +10,7 @@ function LastestSold({ src = "", imageDetail }) {
     <div className="lastestsold-container">
       <Grid container alignItems="center" justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={6}>
-          <img className="lastestsold-img" src={src}></img>
+          <img className="lastestsold-img" alt="lastestSold" src={src}></img>
         </Grid>
         <Grid item xs={12} lg={6}>
           <div className="lastestsold-detail">

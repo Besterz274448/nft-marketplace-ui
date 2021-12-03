@@ -12,7 +12,7 @@ function ArtWork() {
     <div className="feed-items-container">
       <div className="feed-search">
         <Accord title="Price range">
-          <PriceRange/>
+          <PriceRange />
         </Accord>
         <Accord title="Availability">
           <RadioGroupButton title="Availability" option={option} />

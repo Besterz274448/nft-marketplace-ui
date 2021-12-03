@@ -1,6 +1,6 @@
 .navbar-root {
-  padding: 25px 0px;
-  width: 100%;
+  margin:20px auto;
+  width: 95%;
   display: flex;
   background-color: white;
   justify-content: space-between;
@@ -11,6 +11,8 @@
 .navbar-logo {
   display: flex;
   justify-content: center;
+  z-index: 150;
+  position: relative;
 }
 
 .navbar-searchfield-container {
@@ -58,9 +60,11 @@
 .navbar-button {
   display: flex; /*remark*/
   justify-content: center;
+  z-index: 150;
+  position: relative;
 }
 
-.nevbar-phone {
+.navbar-phone {
   display: none;
   justify-content: center;
   flex: 0.15;
@@ -110,7 +114,7 @@
   .navbar-button {
     display: none;
   }
-  .nevbar-phone {
+  .navbar-phone {
     display: flex;
   }
 }

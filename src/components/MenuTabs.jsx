@@ -10,11 +10,6 @@ function MenuTabs({
   ],
   sortComponent = <></>,
 }) {
-  const style = {
-    actives: {
-      borderBottom: "1px solid black",
-    },
-  };
 
   return (
     <>

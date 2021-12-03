@@ -41,7 +41,7 @@
 .userprofile-root {
   position: relative;
   margin-top: -100px;
-  z-index: 100;
+  z-index: 50;
 }
 
 .userprofile-background {
@@ -79,6 +79,7 @@
 
 .userprofile-description-container {
   margin: 30px 40px;
+  display: flex;
 }
 
 .userprofile-description-text-container {
@@ -113,10 +114,13 @@
 
 .userprofile-follow {
   margin: 20px 0px;
-  margin-right: 25%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.userprofile-follow > * {
+  flex: 0.33;
 }
 
 .userprofile-follow-text {
@@ -125,7 +129,7 @@
 
 .userprofile-followedBy > div {
   margin: 10px 0px;
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .avatar-followed {
@@ -139,7 +143,7 @@
   z-index: 1;
 }
 
-.openModal-followed-button{
+.openModal-followed-button {
   cursor: pointer;
 }
 
@@ -147,7 +151,7 @@
   margin-top: 30px;
 }
 
-.userprofile-bio-detail{
+.userprofile-bio-detail {
   font-size: 14px;
 }
 
@@ -167,12 +171,123 @@
   -webkit-text-fill-color: transparent;
 }
 
+.artworkdetail-root {
+  position: relative;
+  margin-top: -100px;
+  z-index: 50;
+}
+
+.artworkdetail-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 550px;
+  background-color: rgb(242, 242, 242);
+}
+
+.artworkdetail-img > img {
+  width: 30%;
+  height: 60%;
+}
+
+.artworkdetail-button-container {
+  margin: 0px 20px;
+  padding: 10px;
+  position: relative;
+  margin-top: -110px;
+  z-index: 20;
+  color: #fff;
+  font-weight: bold;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artworkdetail-button-container > * {
+  margin-top: 70px;
+}
+
+.artworkdetail-share-button {
+  display: flex;
+  align-items: center;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  border: 1px solid white;
+  background-color: white;
+  padding: 10px 25px;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.artworkdetail-container {
+  margin: 0px 40px;
+  align-items: center;
+}
+
+.artworkdetail-half-container {
+  flex: 0.5;
+}
+
+.artworkdetail-half-container > h6 , p {
+  font-size: 16px;
+  margin:2% 0px;
+
+}
+
+.artworkdetail-image-name{
+  font-size: 40px;
+}
+
+.createasset-root{
+  margin:4rem auto;
+  width:70%;
+  line-height: 1rem;
+}
+
+
+.createasset-required{
+  color: red;
+}
+
+.createasset-root > textarea{
+  resize: none;
+  height: 100px;
+}
+
 @media only screen and (max-width: 600px) {
   .userprofile-contract-container {
     justify-content: center;
     flex-direction: column;
   }
+  .userprofile-description-container {
+    flex-direction: column;
+  }
+
+  .userprofile-description-text-container > * {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .userprofile-contract-button {
     margin-top: 0;
+  }
+
+  .userprofile-avatar-followed {
+    justify-content: center;
+  }
+
+  .userprofile-descrition-artworks {
+    margin-top: 5%;
+  }
+
+  /* artwork detail page responsive */
+  .artworkdetail-button-container {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .artworkdetail-img > img {
+    width: 80%;
   }
 }

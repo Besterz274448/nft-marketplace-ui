@@ -8,7 +8,7 @@ function SelectBox(props) {
     <FormGroup>
       {props.option.map((l, i) => {
         return (
-          <div className="accord-box">
+          <div key={l+i} className="accord-box">
             <FormControlLabel value={l} control={<Checkbox />} label={l} labelPlacement="end" />
           </div>
         );
