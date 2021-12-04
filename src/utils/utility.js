@@ -1,4 +1,4 @@
-const contractABI = require("../FactoryNFT.json");
+const contractABI = require("../MyNFT.json");
 const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 const Web3 = require("web3");
 const ethers = require("ethers");
@@ -10,13 +10,14 @@ export const mintToken = async (url) => {
     return;
   }
 
+  window.ethereum.enable();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  console.log(signer);
+  const wallet = await signer.getAddress();
   const contract = new ethers.Contract(contractAddress, contractABI.abi, signer);
 
   try {
-    const tx = await contract.createToken(url);
+    const tx = await contract.mintNFT(wallet, url);
     console.log(tx);
     const receipt = await tx.wait();
     console.log(receipt);
