@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/ton/nft-marketplace-ui/contracts/factoryNFT.sol": {
-      "lastModificationDate": 1638080447153,
-      "contentHash": "54abbe44f3d9b9d00dff330572f7ee4e",
+      "lastModificationDate": 1638602985537,
+      "contentHash": "5446804e9fc612dadf84d9badcd3a0eb",
       "sourceName": "contracts/factoryNFT.sol",
       "solcConfig": {
         "version": "0.8.3",
@@ -439,6 +439,83 @@
       ],
       "artifacts": [
         "IERC165"
+      ]
+    },
+    "/home/ton/nft-marketplace-ui/contracts/MyNFT.sol": {
+      "lastModificationDate": 1638603632187,
+      "contentHash": "c2903ecd732bd220117154e7d6cb0a42",
+      "sourceName": "contracts/MyNFT.sol",
+      "solcConfig": {
+        "version": "0.8.3",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "MyNFT2"
+      ]
+    },
+    "/home/ton/nft-marketplace-ui/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1638079861313,
+      "contentHash": "cbba874af15bc1c65a1c82aebec1a0fe",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.3",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
       ]
     }
   }
