@@ -1,16 +1,18 @@
 import React from "react";
 import "../asset/navbar.css";
 import MetaMaskLogo from "../asset/svg/metamasklogo.png";
-import AdorableLogo from "../asset/svg/Adorable-Panda.svg";
+import logoWeb from "../asset/svg/logoWeb.png";
 import Button from "./Button";
-import { NavLink } from "react-router-dom";
-import Modal from "@mui/material/Modal";
+import { NavLink,useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PhoneMenu from "./PhoneMenu";
 import Web3 from "web3";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useLocation } from "react-router-dom";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const style = {
   position: "absolute",
@@ -44,10 +46,10 @@ const searchPhoneStyle = {
 let web3 = undefined; // Will hold the web3 instance
 
 function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
+  const navigate = useNavigate();
   const [selectInput, setSelect] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false); // Loading button state
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleInputOpen = () => setSelect(true);
@@ -63,7 +65,7 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
 
   const handleAuthenticate = ({ publicAddress, signature }) => {
     return fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
-      body: JSON.stringify({ publicAddress, signature, forceTest: true }),
+      body: JSON.stringify({ publicAddress, signature, forceTest: false }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -78,6 +80,7 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
         publicAddress,
         "" // MetaMask will ignore the password argument here
       );
+      console.log(`signature : ${signature}`);
       return { publicAddress, signature };
     } catch (err) {
       throw new Error("You need to sign the message to be able to log in.");
@@ -93,6 +96,10 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
       method: "POST",
     }).then((response) => response.json());
   };
+
+  function getProfilePage() {
+    navigate("/user/d");
+  }
 
   const handleClick = async () => {
     if (!window.ethereum) {
@@ -112,9 +119,6 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
         return;
       }
     }
-
-    console.log(web3.eth);
-
     const coinbase = await web3.eth.getCoinbase();
     if (!coinbase) {
       window.alert("Please activate MetaMask first.");
@@ -129,13 +133,13 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
         `${process.env.REACT_APP_BACKEND_URL}/users?publicAddress=${publicAddress}`
       );
       let user = await response.json();
-      let userData = user.data !== null ? user : await handleSignup(publicAddress);
+      let userData = user.statusCode === 404 ? await handleSignup(publicAddress) : user ;
       let signMessage = await handleSignMessage(userData.data);
       let token = await handleAuthenticate(signMessage);
       onLoggedIn(token.data);
       setOpen(false);
     } catch (err) {
-      window.alert(err);
+      handleStatus("error", err);
     }
     setLoading(false);
   };
@@ -147,7 +151,7 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
           className="navbar-logo"
           style={{ display: selectInput && window.innerWidth < 800 ? "none" : "flex" }}>
           <NavLink to="/">
-            <img height="55px" src={AdorableLogo} alt="logo" />
+            <img height="55px" src={"https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/circle.png"} alt="logo" />
           </NavLink>
         </div>
         <div className={"navbar-searchfield-container"}>
@@ -173,7 +177,7 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
           </div>
         </div>
         <div className="navbar-button">
-          {!auth && (
+          {!auth ? (
             <Button //wallet button
               onClick={handleClick}
               width="150%"
@@ -182,8 +186,32 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
                 // color:buttonColor === 'black' ? "white" : "black",
                 padding: "17.5px 14px",
               }}
-              name={loading ? <CircularProgress size={20} /> : "Connect Wallet"}
+              name={loading ? <CircularProgress size={20} /> : <span>Connect Wallet</span>}
             />
+          ) : (
+            <div className="flex" style={{ alignItems: "center" }}>
+              <NavLink to="/asset/create">
+                <Button //createAsset
+                  width="100%"
+                  sx={{
+                    backgroundColor: "rgba(100,100,255,1)",
+                    // color:buttonColor === 'black' ? "white" : "black",
+                    padding: "17.5px 14px",
+                  }}
+                  name={"Create Asset"}
+                />
+              </NavLink>
+              <IconButton onClick={getProfilePage}>
+                <Avatar size="medium" sx={{ width: 56, height: 56 }}>
+                  N
+                </Avatar>
+              </IconButton>
+              <IconButton onClick={handleLoggedOut}>
+                <Avatar size="medium" sx={{ width: 56, height: 56 }}>
+                  <LogoutIcon/>
+                </Avatar>
+              </IconButton>
+            </div>
           )}
         </div>
         <div className="navbar-phone">
@@ -191,61 +219,11 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
             <p>Phone Menu</p>
           </PhoneMenu>
         </div>
-
         <div //backdrop
           className="Backdrop"
           onClick={handleInputClose}
           style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
       </div>
-      {/* <>
-        <Modal //modal connect wallet
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Connect your wallet.
-            </Typography>
-            <Typography id="modal-modal-description1" sx={{ m: 2, fontSize: "12px" }}>
-              By connecting your wallet, you agree to our Terms of Service and our Privacy Policy.
-            </Typography>
-            <Typography id="modal-modal-description2" sx={{ m: 2, fontSize: "12px" }}>
-              <Button
-                width="100%"
-                sx={{
-                  padding: "14px 14px",
-                  borderRadius: "6px",
-                  background:
-                    "linear-gradient(90deg, rgba(244,93,47,1) 0%, rgba(254,209,119,1) 100%)",
-                }}
-                name={
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: loading ? "center" : "space-between",
-                    }}>
-                    {loading ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <>
-                        <span>Metamask</span>
-                        <img src={MetaMaskLogo} width="20px" alt="metamask-logo"></img>
-                      </>
-                    )}
-                  </div>
-                }
-              />
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2, fontSize: "12px" }}>
-              New to Ethereum?
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 0, fontSize: "12px" }}>
-              Learn more about wallets
-            </Typography>
-          </Box>
-        </Modal>
-      </> */}
     </>
   );
 }

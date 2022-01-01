@@ -5,6 +5,11 @@ import SectionBar from "../components/SectionBar";
 import Grid from "@mui/material/Grid";
 
 function Home() {
+
+  React.useEffect(()=>{
+    
+  },[])
+
   return (
     <div className="main-content">
       <LastestBuy src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}/>

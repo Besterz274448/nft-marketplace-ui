@@ -15,16 +15,34 @@ const LS_KEY = "login-with-metamask:auth";
 function Main() {
   const [auth, setAuth] = React.useState(undefined);
   const [status, setStatus] = React.useState({
-    severity: "warning",
+    severity: "",
     message: "This is a warning alert",
   });
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     // Access token is stored in localstorage
     const ls = window.localStorage.getItem(LS_KEY);
-    const token = ls && JSON.parse(ls);
+    let token = ls && JSON.parse(ls);
+    const validateToken = await isTokenValid(token);
+    if (!validateToken) {
+      localStorage.removeItem(LS_KEY);
+      token = undefined;
+    }
     setAuth(token);
   }, []);
+
+  const isTokenValid = async (token) => {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.status === 200;
+  };
 
   const handleLoggedIn = (token) => {
     localStorage.setItem(LS_KEY, JSON.stringify(token));
@@ -37,12 +55,17 @@ function Main() {
   };
 
   const handleStatus = (severity, message) => {
-    setStatus({severity,message});
+    setStatus({ severity, message });
   };
 
   return (
     <div className="main-root">
-      <NavBar onLoggedIn={handleLoggedIn} handleLoggedOut={handleLoggedOut} auth={auth} handleStatus={handleStatus} />
+      <NavBar
+        onLoggedIn={handleLoggedIn}
+        handleLoggedOut={handleLoggedOut}
+        auth={auth}
+        handleStatus={handleStatus}
+      />
       {status.severity !== "" && (
         <Fade in={status.severity !== ""}>
           <Alert
@@ -57,15 +80,24 @@ function Main() {
           </Alert>
         </Fade>
       )}
-
       <section>
-        {auth && "Hello World" + auth}
         <Routes>
           <Route exact="true" path="/" element={<Home />} />
           <Route path="feed/*" element={<Feed />} />
           <Route path="user/*" element={<UserProfile />} />
           <Route path="/artworks/:id" element={<ArtworkDetail />} />
-          <Route exact path="/asset/create" element={<CreateAsset auth={auth} />} />
+          <Route
+            exact
+            path="/asset/create"
+            element={
+              <CreateAsset
+                handleStatus={handleStatus}
+                validateToken={isTokenValid}
+                handleLoggedOut={handleLoggedOut}
+                authToken={auth}
+              />
+            }
+          />
         </Routes>
       </section>
     </div>

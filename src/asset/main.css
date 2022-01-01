@@ -17,6 +17,7 @@
   padding: 10px 0px;
 }
 
+
 @media only screen and (min-width: 1000px) {
   .feed-search {
     flex: 0.23;
@@ -231,7 +232,6 @@
 .artworkdetail-half-container > h6 , p {
   font-size: 16px;
   margin:2% 0px;
-
 }
 
 .artworkdetail-image-name{
@@ -244,7 +244,6 @@
   line-height: 1rem;
 }
 
-
 .createasset-required{
   color: red;
 }
@@ -252,6 +251,12 @@
 .createasset-root > textarea{
   resize: none;
   height: 100px;
+}
+
+.createasset-modal-button{
+  color:rgba(50, 50, 255, 1);
+  font-weight: bold;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 600px) {

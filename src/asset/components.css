@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.ai-center{
+  align-items: center;
+}
+
 .b {
   font-weight: bold;
 }

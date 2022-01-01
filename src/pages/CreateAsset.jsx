@@ -3,17 +3,87 @@ import "../asset/main.css";
 import TextField from "@mui/material/TextField";
 import Button from "../components/Button";
 import UploadImage from "../components/UploadImage";
-import ipfs from "../config/ipfs";
-import { mintToken } from "../utils/utility";
+import { NavLink, useNavigate } from "react-router-dom";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Alert from "@material-ui/lab/Alert";
+import Fade from "@material-ui/core/Fade";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { addIpfs } from "../utils/ipfsService.js";
 
-function CreateAsset({ auth }) {
+const ethers = require("ethers");
+
+function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }) {
+  const navigate = useNavigate();
+  const collectionRef = React.useRef();
+  const [auth, setAuth] = React.useState(undefined);
+  const [backdropStatus, setBackdrop] = React.useState(false);
+  const [collectionList, setList] = React.useState([]);
   const [collection, setSelectedColletction] = React.useState("");
   const [disableSubmit, setDisable] = React.useState(true);
+  const [errorMsg, setMsg] = React.useState({
+    severity: "",
+    message: "This is a warning alert",
+  });
   const [img, setImg] = React.useState({
     src: "",
     name: "",
     type: "",
   });
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setMsg({
+      severity: "",
+      message: "",
+    });
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  React.useEffect(async () => {
+    const storage = await window.localStorage.getItem("login-with-metamask:auth");
+    let token = storage && JSON.parse(storage);
+    if (!token || !validateToken(token)) {
+      navigate("/");
+      return;
+    }
+
+    setAuth(token);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collections/getAllByUser`, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res) => res.json());
+
+    if (response.statusCode === 401) {
+      handleStatus("warning", "เซสชันหมดอายุ กรุณาล็อคอินใหม่อีกครั้ง");
+      handleLoggedOut();
+      navigate("/");
+    }
+
+    let collections = [];
+    if (response.data !== undefined) {
+      collections = response.data.map((data) => {
+        return { id: data.id, name: data.name };
+      });
+    }
+
+    setList(collections);
+  }, [authToken]);
 
   function _arrayBufferToBase64(buffer) {
     var binary = "";
@@ -47,6 +117,49 @@ function CreateAsset({ auth }) {
     setDisable(true);
   };
 
+  const createCollection = async (e) => {
+    setBackdrop(true);
+    let name = collectionRef.current.value;
+    if (name.trim().length === 0 || name.trim().length < 6) {
+      setMsg({ severity: "warning", message: "กรุณากรอกข้อมูลให้ถูกต้อง" });
+      setBackdrop(false);
+      return false;
+    }
+
+    const validToken = await validateToken(auth);
+    if (!validToken) {
+      handleStatus("warning", "เซสชันหมดอายุ กรุณาล็อคอินใหม่อีกครั้ง");
+      handleLoggedOut();
+      navigate("/");
+      return;
+    }
+
+    handleClose();
+    const token = `Bearer ${auth}`;
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collections`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify({ name }),
+    })
+      .then((res) => res.json())
+      .catch((err) => {
+        window.alert(err);
+      });
+
+    console.log(response);
+    let { id } = response.data;
+    let newCollections = [...collectionList];
+    newCollections.push({ id, name });
+    setList(newCollections);
+    setSelectedColletction(id);
+    setBackdrop(false);
+  };
+
   async function getDataImage(file) {
     let result_base64 = await new Promise((resolve) => {
       let fileReader = new FileReader();
@@ -57,79 +170,135 @@ function CreateAsset({ auth }) {
   }
 
   const createAsset = async (e) => {
-    //waiting for add condition check window.ethereum allowed
-
     e.preventDefault();
+    setBackdrop(true);
     setDisable(true);
-    const cid = await ipfs.add(img.src);
-    const source = await ipfs.add(
-      {
-        path: "metadata.json",
-        content: JSON.stringify({
-          name: img.name,
-          description: e.target["asset-description"].value,
-          image: `https://ipfs.io/ipfs/${cid.path}`,
-        }),
-      },
-      {
-        wrapWithDirectory: true,
+
+    const validToken = await validateToken(auth);
+    if (!validToken) {
+      handleStatus("warning", "เซสชันหมดอายุ กรุณาล็อคอินใหม่อีกครั้ง");
+      handleLoggedOut();
+      navigate("/");
+      return;
+    }
+    await window.ethereum.enable();
+
+    try {
+      let { cid, source } = await addIpfs(
+        img,
+        e.target["asset-name"].value,
+        e.target["asset-description"].value
+      );
+
+      /*get txFee*/
+      const token = `Bearer ${auth}`;
+      const response = await fetch(
+        `${
+          process.env.REACT_APP_BACKEND_URL
+        }/billings/createMintBilling?cid=${source.cid.toString()}/metadata.json`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: token,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .catch((err) => {
+          throw new Error("Failed to Fetch TxFee Of MintBilling");
+        });
+
+      if (response.statusCode !== 200) {
+        throw new Error("Failed to Fetch TxFee Of MintBilling");
       }
-    );
 
-    console.log(source);
-    mintToken(source.cid.toString());
-    // mintToken("test");
+      const txFee = response.data;
 
-    // let newAsset = {
-    //   name: e.target["asset-name"].value,
-    //   description: e.target["asset-description"].value,
-    //   fileName: img.name,
-    //   fileType: img.type,
-    //   cid: cid.path,
-    //   collectionId: "306af3fa-9d28-472b-8c4e-961749f49ea4",
-    //   collectionName: "Potato",
-    //   metadata: source.cid.toString(),
-    // };
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      console.log(txFee);
 
-    // console.log(newAsset);
+      const tx = await signer.sendTransaction({
+        to: process.env.REACT_APP_BACKEND_WALLET,
+        value: ethers.utils.parseEther(txFee),
+      });
 
-    // const token = `Bearer ${auth}`;
-    // //use state auth from main
-    // const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`, {
-    //   method: "POST",
-    //   mode: "cors",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Accept: "application/json",
-    //     Authorization: token,
-    //   },
-    //   body: JSON.stringify(newAsset),
-    // })
-    //   .then((res) => res.json())
-    //   .catch((err) => {
-    //     window.alert(err);
-    //   });
-    // console.log(response);
-    // if (response.statusCode === 201) {
-    //   fetch(response.data.s3Url, {
-    //     method: "PUT",
-    //     headers: {
-    //       Accept: "*/*",
-    //       "Content-type": img.type,
-    //     },
-    //     body: _arrayBufferToBase64(img.src),
-    //   })
-    //     .then((res) => res.status)
-    //     .then((res) => {
-    //       console.log("put image to s3 : " + res);
-    //       setDisable(false);
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
+      let collectionName = collectionList.filter((data) => {
+        return data.id === collection;
+      })[0].name;
+
+      let newAsset = {
+        name: e.target["asset-name"].value,
+        description: e.target["asset-description"].value,
+        fileName: img.name,
+        fileType: img.type,
+        collectionId: collection,
+        collectionName: collectionName,
+        cid: cid.path,
+        metadata: `${source.cid.toString()}`,
+        txHash: tx.hash,
+        forceTest:false,
+      };
+
+      console.log(newAsset);
+      const preSignedUrl = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(newAsset),
+      })
+        .then((res) => res.json())
+        .catch((err) => {
+          throw new Error("create failed");
+        });
+
+      console.log(preSignedUrl);
+
+      if (preSignedUrl.statusCode === 201) {
+        fetch(preSignedUrl.data.s3Url, {
+          method: "PUT",
+          headers: {
+            Accept: "*/*",
+            "Content-Type": img.type,
+          },
+          body: _arrayBufferToBase64(img.src),
+        })
+          .then((res) => res.status)
+          .then((res) => {
+            console.log("put image to s3 : " + res);
+            handleStatus("success", "MINT NFT SUCCESS");
+          })
+          .catch((err) => {
+            console.log(err);
+
+            console.log("upload s3 error");
+          });
+      }
+    } catch (err) {
+      handleStatus("warning", "เกิดข้อผิดพลาด กรุณาทำรายการใหม่อีกครั้ง");
+      console.log(err);
+    } finally {
+      setDisable(false);
+      setBackdrop(false);
+    }
   };
 
   return (
     <div className="createasset-root">
+      <div>
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={backdropStatus}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
       <form onSubmit={createAsset}>
         <h1>Create New Item</h1>
         <h4>
@@ -148,6 +317,7 @@ function CreateAsset({ auth }) {
           size="small"
           required
         />
+
         <h4>Description</h4>
         <TextField
           id="asset-description"
@@ -161,7 +331,32 @@ function CreateAsset({ auth }) {
           variant="outlined"
         />
         <h4>Collection</h4>
-        <div></div>
+        <div className="flex ai-center">
+          <div style={{ width: "85%" }}>
+            <FormControl fullWidth>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                defaultValue={""}
+                value={collection}
+                required
+                onChange={handleChange}>
+                <MenuItem value={""}>None Selected</MenuItem>
+                {collectionList.map((value, index) => {
+                  return (
+                    <MenuItem key={value.id} value={value.id}>
+                      {value.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginLeft: "24px" }} onClick={handleClickOpen}>
+            <span className="createasset-modal-button">+</span>
+            <span className="createasset-modal-button">Create Asset</span>
+          </div>
+        </div>
         <Button
           name="Submit"
           sx={{
@@ -174,7 +369,58 @@ function CreateAsset({ auth }) {
           disable={disableSubmit}
         />
       </form>
-      <div style={{ height: "500px" }}></div>
+      <Dialog open={open} fullWidth maxWidth="xs" onClose={handleClose}>
+        <DialogTitle>Create New Collection</DialogTitle>
+        <DialogContent>
+          {errorMsg.severity !== "" && (
+            <Fade in={errorMsg.severity !== ""}>
+              <Alert
+                severity={errorMsg.severity}
+                onClose={() => {
+                  setMsg({
+                    severity: "",
+                    message: "",
+                  });
+                }}>
+                {errorMsg.message}
+              </Alert>
+            </Fade>
+          )}
+          <TextField
+            autoFocus
+            inputRef={collectionRef}
+            helperText={"ชื่อของ Collection ต้องมีความยาวมากกว่าหรือเท่ากับ 6 ตัวอักษร"}
+            margin="dense"
+            id="name"
+            label="Collection Name"
+            type="email"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            name="Submit"
+            onClick={createCollection}
+            sx={{
+              width: "fit-content",
+              padding: "10px 20px",
+              backgroundColor: "rgb(100,100,200)",
+            }}
+            type="submit"
+          />
+          <Button
+            name="Cancel"
+            onClick={handleClose}
+            sx={{
+              width: "fit-content",
+              padding: "10px 20px",
+              backgroundColor: "rgb(200,50,50)",
+            }}
+            type="submit"
+          />
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
