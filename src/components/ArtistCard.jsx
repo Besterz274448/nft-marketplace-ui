@@ -1,31 +1,26 @@
 import React from "react";
 import "../asset/components.css";
 
-function ArtistCard({
-  src = "",
-  name = "Edward Snowden",
-  contract = "Snowden",
-  artistDescription = "I used to work for the government. Now I work for the public. President, Freedom of the Press Foundation",
-}) {
+function ArtistCard({user}) {
+
   return (
     <div className="image-card-container">
       <div className="artist-card-container">
-        <img className="artist-card-img" src={src} alt="artistCardImage"></img>
+        <img className="artist-card-img" src="https://documents.dickson-constant.com/medias/images/catalogue/api/m654-grey-680.jpg" alt="artistCardImage"></img>
       </div>
       <div className="artist-detail-container">
         <div className="artist-detail-avatar-box">
           <div>
-            <img src={src} alt="artistCardAvatar"/>
+            <img src={user.avatar ? user.avatar : "https://documents.dickson-constant.com/medias/images/catalogue/api/m654-grey-680.jpg"} alt="artistCardAvatar" />
           </div>
         </div>
-        <div className="artist-detail-name b">{name}</div>
         <div>
-          <span className="artist-detail-contract b">@{contract}</span>
+          <span className="artist-detail-contract b">@{user.username}</span>
         </div>
         <div className="artist-detail-description">
-          {artistDescription.length > 120
-            ? artistDescription.substring(0, 120) + "..."
-            : artistDescription}
+          {user.description?.length > 120
+            ? user.description.substring(0, 120) + "..."
+            : user.description}
         </div>
       </div>
     </div>

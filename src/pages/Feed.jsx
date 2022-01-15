@@ -5,14 +5,28 @@ import MenuTabs from "../components/MenuTabs";
 import "../asset/main.css";
 import { Routes, Route } from "react-router-dom";
 
-function Feed() {
+function Feed({ nfts, users }) {
   return (
-      //get amount of data
+    //get amount of data
     <div className="feed-content main-content">
-      <MenuTabs sortComponent={<>TEST</>} />
+      <MenuTabs
+        menu={[
+          { name: "Profiles", to: "/feed/profiles", count:users.length },
+          { name: "Artworks", to: "/feed/artworks", count: nfts.length },
+        ]}
+        sortComponent={<>TEST</>}
+      />
       <Routes>
-        <Route exact="true" path="/artworks" element={<ArtWork/>} />
-        <Route exact="true" path="/profiles" element={<Profiles />} />
+        <Route
+          exact="true"
+          path="/artworks"
+          element={<ArtWork nfts={nfts} />}
+        />
+        <Route
+          exact="true"
+          path="/profiles"
+          element={<Profiles users={users} />}
+        />
       </Routes>
     </div>
   );

@@ -16,7 +16,11 @@ export const mintToken = async (url) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const publicKey = await signer.getAddress();
-  const contract = new ethers.Contract(contractAddress, contractABI.abi, signer);
+  const contract = new ethers.Contract(
+    contractAddress,
+    contractABI.abi,
+    signer
+  );
 
   provider.getBalance(publicKey).then((balance) => {
     // convert a currency unit from wei to ether
@@ -39,12 +43,19 @@ export const mintToken = async (url) => {
   // }
 };
 
+export const jwtDecode = (token) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (e) {
+    return null;
+  }
+};
 
-  // const checkBalance = async (provider, publicKey) => {
-  //   await provider.getBalance(publicKey).then((balance) => {
-  //     // convert a currency unit from wei to ether
-  //     const gasLimitEth = ethers.utils.formatEther("0x7530");
-  //     const balanceInEth = ethers.utils.formatEther(balance);
-  //     return balanceInEth > gasLimitEth;
-  //   });
-  // };
+// const checkBalance = async (provider, publicKey) => {
+//   await provider.getBalance(publicKey).then((balance) => {
+//     // convert a currency unit from wei to ether
+//     const gasLimitEth = ethers.utils.formatEther("0x7530");
+//     const balanceInEth = ethers.utils.formatEther(balance);
+//     return balanceInEth > gasLimitEth;
+//   });
+// };

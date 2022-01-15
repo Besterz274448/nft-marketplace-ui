@@ -8,6 +8,9 @@ function UploadImage(props) {
     onDropAccepted: (files) => props.handleImg(files),
   });
 
+  const maxSize = props.maxSize;
+  const style = {width:"100%",height:"300px"}
+  const word = props.maxSize ? "Upload Your Avatar" : "Drag 'n' drop some files here, or click to select files" 
   function _arrayBufferToBase64( buffer ) {
     var binary = '';
     var bytes = new Uint8Array( buffer );
@@ -19,13 +22,13 @@ function UploadImage(props) {
 }
 
   return (
-    <section className="uploadimage-container">
-      <div {...getRootProps({ className: "uploadimage-dropzone" })}>
+    <section className="uploadimage-container" style={maxSize && style}>
+      <div {...getRootProps({ className: "uploadimage-dropzone" })} >
         <input type="file" id={props.id} {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>{word}</p>
         <div className="uploadimage-preview">
           {props.img.src &&
-            <img src={`data:${props.img.type};base64,${_arrayBufferToBase64(props.img.src)}`} width={"100%"} height={"300px"} alt="preview-image"></img>
+            <img src={`data:${props.img.type};base64,${_arrayBufferToBase64(props.img.src)}`} width={"100%"} height={"300px"} alt="preview"></img>
           }
         </div>
       </div>

@@ -3,7 +3,7 @@ import "../asset/main.css";
 import TextField from "@mui/material/TextField";
 import Button from "../components/Button";
 import UploadImage from "../components/UploadImage";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -19,7 +19,12 @@ import { addIpfs } from "../utils/ipfsService.js";
 
 const ethers = require("ethers");
 
-function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }) {
+function CreateAsset({
+  authToken,
+  handleStatus,
+  validateToken,
+  handleLoggedOut,
+}) {
   const navigate = useNavigate();
   const collectionRef = React.useRef();
   const [auth, setAuth] = React.useState(undefined);
@@ -50,39 +55,47 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
     setOpen(false);
   };
 
-  React.useEffect(async () => {
-    const storage = await window.localStorage.getItem("login-with-metamask:auth");
-    let token = storage && JSON.parse(storage);
-    if (!token || !validateToken(token)) {
-      navigate("/");
-      return;
-    }
+  React.useEffect(() => {
+    const userValidation = async () => {
+      const storage = await window.localStorage.getItem(
+        "login-with-metamask:auth"
+      );
+      let token = storage && JSON.parse(storage);
+      if (!token || !validateToken(token)) {
+        navigate("/");
+        return;
+      }
 
-    setAuth(token);
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collections/getAllByUser`, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((res) => res.json());
+      setAuth(token);
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/collections/getAllByUser`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).then((res) => res.json());
 
-    if (response.statusCode === 401) {
-      handleStatus("warning", "เซสชันหมดอายุ กรุณาล็อคอินใหม่อีกครั้ง");
-      handleLoggedOut();
-      navigate("/");
-    }
+      if (response.statusCode === 401) {
+        handleStatus("warning", "เซสชันหมดอายุ กรุณาล็อคอินใหม่อีกครั้ง");
+        handleLoggedOut();
+        navigate("/");
+      }
 
-    let collections = [];
-    if (response.data !== undefined) {
-      collections = response.data.map((data) => {
-        return { id: data.id, name: data.name };
-      });
-    }
+      let collections = [];
+      if (response.data !== undefined) {
+        collections = response.data.map((data) => {
+          return { id: data.id, name: data.name };
+        });
+      }
 
-    setList(collections);
+      setList(collections);
+    };
+    userValidation();
   }, [authToken]);
 
   function _arrayBufferToBase64(buffer) {
@@ -136,16 +149,19 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
 
     handleClose();
     const token = `Bearer ${auth}`;
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/collections`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify({ name }),
-    })
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/collections`,
+      {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ name }),
+      }
+    )
       .then((res) => res.json())
       .catch((err) => {
         window.alert(err);
@@ -240,20 +256,22 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
         cid: cid.path,
         metadata: `${source.cid.toString()}`,
         txHash: tx.hash,
-        forceTest:false,
+        forceTest: false,
       };
 
-      console.log(newAsset);
-      const preSignedUrl = await fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts`, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify(newAsset),
-      })
+      const preSignedUrl = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/nfts`,
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify(newAsset),
+        }
+      )
         .then((res) => res.json())
         .catch((err) => {
           throw new Error("create failed");
@@ -295,7 +313,8 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
       <div>
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={backdropStatus}>
+          open={backdropStatus}
+        >
           <CircularProgress color="inherit" />
         </Backdrop>
       </div>
@@ -304,7 +323,12 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
         <h4>
           Image<span className="createasset-required">*</span>
         </h4>
-        <UploadImage id="asset-image" img={img} handleImg={handleImg} resetImg={resetImg} />
+        <UploadImage
+          id="asset-image"
+          img={img}
+          handleImg={handleImg}
+          resetImg={resetImg}
+        />
         <h4>
           Name<span className="createasset-required">*</span>
         </h4>
@@ -340,7 +364,8 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
                 defaultValue={""}
                 value={collection}
                 required
-                onChange={handleChange}>
+                onChange={handleChange}
+              >
                 <MenuItem value={""}>None Selected</MenuItem>
                 {collectionList.map((value, index) => {
                   return (
@@ -363,7 +388,9 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
             width: "fit-content",
             padding: "10px 20px",
             marginTop: "10px",
-            backgroundColor: disableSubmit ? "rgba(0,0,0,0.1)" : "rgb(100,100,200)",
+            backgroundColor: disableSubmit
+              ? "rgba(0,0,0,0.1)"
+              : "rgb(100,100,200)",
           }}
           type="submit"
           disable={disableSubmit}
@@ -381,7 +408,8 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
                     severity: "",
                     message: "",
                   });
-                }}>
+                }}
+              >
                 {errorMsg.message}
               </Alert>
             </Fade>
@@ -389,7 +417,9 @@ function CreateAsset({ authToken, handleStatus, validateToken, handleLoggedOut }
           <TextField
             autoFocus
             inputRef={collectionRef}
-            helperText={"ชื่อของ Collection ต้องมีความยาวมากกว่าหรือเท่ากับ 6 ตัวอักษร"}
+            helperText={
+              "ชื่อของ Collection ต้องมีความยาวมากกว่าหรือเท่ากับ 6 ตัวอักษร"
+            }
             margin="dense"
             id="name"
             label="Collection Name"

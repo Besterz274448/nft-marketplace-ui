@@ -1,60 +1,32 @@
 import React from "react";
 import "../asset/navbar.css";
-import MetaMaskLogo from "../asset/svg/metamasklogo.png";
-import logoWeb from "../asset/svg/logoWeb.png";
+import Logo from "../asset/svg/geometryshape.png"
 import Button from "./Button";
-import { NavLink,useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { NavLink, useNavigate } from "react-router-dom";
 import PhoneMenu from "./PhoneMenu";
 import Web3 from "web3";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useLocation } from "react-router-dom";
-import LogoutIcon from '@mui/icons-material/Logout';
-
-const style = {
-  position: "absolute",
-  top: "40%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 270,
-  bgcolor: "background.paper",
-  border: "1px solid rgba(0,0,0,0.1)",
-  borderRadius: "10%",
-  boxShadow: 24,
-  textAlign: "center",
-  p: 5,
-};
-
-const searchPhoneStyle = {
-  position: "absolute",
-  top: "10%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 250,
-  height: 40,
-  bgcolor: "background.paper",
-  border: "1px solid rgba(0,0,0,0.4)",
-  borderRadius: "24px",
-  boxShadow: 24,
-  textAlign: "center",
-  p: 5,
-};
+import LogoutIcon from "@mui/icons-material/Logout";
+import SearchItem from "./SearchItem";
+import {jwtDecode} from "../utils/utility";
 
 let web3 = undefined; // Will hold the web3 instance
 
-function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
+function NavBar({
+  onLoggedIn,
+  auth,
+  handleStatus,
+  handleLoggedOut,
+  nfts = [],
+}) {
   const navigate = useNavigate();
   const [selectInput, setSelect] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false); // Loading button state
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [searchKey, setSearch] = React.useState("");
   const handleInputOpen = () => setSelect(true);
   const handleInputClose = () => setSelect(false);
-
   // const location = useLocation()
   // const [buttonColor,setButtonColor] = React.useState('black');
 
@@ -98,7 +70,8 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
   };
 
   function getProfilePage() {
-    navigate("/user/d");
+    let id = jwtDecode(auth).payload.id;
+    navigate(`/user/${id}`);
   }
 
   const handleClick = async () => {
@@ -133,13 +106,13 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
         `${process.env.REACT_APP_BACKEND_URL}/users?publicAddress=${publicAddress}`
       );
       let user = await response.json();
-      let userData = user.statusCode === 404 ? await handleSignup(publicAddress) : user ;
+      let userData =
+        user.statusCode === 404 ? await handleSignup(publicAddress) : user;
       let signMessage = await handleSignMessage(userData.data);
       let token = await handleAuthenticate(signMessage);
       onLoggedIn(token.data);
-      setOpen(false);
     } catch (err) {
-      handleStatus("error", err);
+      handleStatus("error", err.message);
     }
     setLoading(false);
   };
@@ -149,9 +122,16 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
       <div className="navbar-root">
         <div
           className="navbar-logo"
-          style={{ display: selectInput && window.innerWidth < 800 ? "none" : "flex" }}>
+          style={{
+            display: selectInput && window.innerWidth < 800 ? "none" : "flex",
+          }}
+        >
           <NavLink to="/">
-            <img height="55px" src={"https://uxwing.com/wp-content/themes/uxwing/download/36-arts-graphic-shapes/circle.png"} alt="logo" />
+            <img
+              height="55px"
+              src={Logo}
+              alt="logo"
+            />
           </NavLink>
         </div>
         <div className={"navbar-searchfield-container"}>
@@ -160,6 +140,9 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
             <input
               placeholder="Search Artwork"
               className="navbar-input"
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
               onClick={handleInputOpen}
               onKeyDown={(e) => {
                 if (e.code === "Escape") {
@@ -170,9 +153,26 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
           </div>
           <div
             className="inputTag"
-            style={selectInput ? { opacity: 1, visibility: "visible" } : {}}>
+            style={selectInput ? { opacity: 1, visibility: "visible" } : {}}
+          >
             <div className="keywordSearch">
               <span className="keywordSearch-header">tags</span>
+              {searchKey.trim().length > 0 &&nfts
+                .filter((data) => data.name.toLowerCase().includes(searchKey.toLowerCase()))
+                .map((data) => {
+                  const key = "searchData" + data.id;
+                  return (
+                    <SearchItem
+                      key={key}
+                      id={data.id}
+                      image={`https://ipfs.io/ipfs/${data.cid}`}
+                      name={data.name}
+                      owner={data.owner}
+                      username={data.username}
+                      handleClose={handleInputClose}
+                    />
+                  );
+                })}
             </div>
           </div>
         </div>
@@ -186,7 +186,13 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
                 // color:buttonColor === 'black' ? "white" : "black",
                 padding: "17.5px 14px",
               }}
-              name={loading ? <CircularProgress size={20} /> : <span>Connect Wallet</span>}
+              name={
+                loading ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <span>Connect Wallet</span>
+                )
+              }
             />
           ) : (
             <div className="flex" style={{ alignItems: "center" }}>
@@ -208,7 +214,7 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
               </IconButton>
               <IconButton onClick={handleLoggedOut}>
                 <Avatar size="medium" sx={{ width: 56, height: 56 }}>
-                  <LogoutIcon/>
+                  <LogoutIcon />
                 </Avatar>
               </IconButton>
             </div>
@@ -222,7 +228,8 @@ function NavBar({ onLoggedIn, auth, handleStatus, handleLoggedOut }) {
         <div //backdrop
           className="Backdrop"
           onClick={handleInputClose}
-          style={selectInput ? { opacity: 1, visibility: "visible" } : {}}></div>
+          style={selectInput ? { opacity: 1, visibility: "visible" } : {}}
+        ></div>
       </div>
     </>
   );

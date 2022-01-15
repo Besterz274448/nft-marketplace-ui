@@ -6,8 +6,8 @@ import Accord from "../components/Accord";
 import RadioGroupButton from "../components/RadioGroupButton";
 import PriceRange from "../components/PriceRange";
 
-function ArtWork() {
-  var option = ["All", "Sold", "Available"];
+function ArtWork({ nfts = [] }) {
+  var option = ["All", "Available"];
   return (
     <div className="feed-items-container">
       <div className="feed-search">
@@ -19,103 +19,26 @@ function ArtWork() {
         </Accord>
       </div>
       <div className="feed-items">
-        <Grid alignItems="center" justifyContent="center" rowGap={3} container spacing={2}>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
-          <Grid item lg={4} md={6} sm={6} xs={11}>
-            <ImageCard
-              src={"https://picsum.photos/200/300?random=" + Math.floor(Math.random() * 1000)}
-              name="BearCollection(1999-2004)-ULTRA-RARE-TyBB"
-              contract="moisesdsanabria"
-              price={1.0}
-            />
-          </Grid>
+        <Grid
+          alignItems="center"
+          rowGap={3}
+          container
+          spacing={2}
+        >
+          {nfts.map((data, index) => (
+            <Grid key={data.cid} item lg={3} md={4} sm={6} xs={10}>
+              <ImageCard
+                id={data.id}
+                contractID={data.owner}
+                src={"https://ipfs.io/ipfs/" + data.cid}
+                name={data.name}
+                price={data.currentPrice}
+                sellStatus={data.sellStatus}
+                username={data.username}
+                avatar={data.avatar}
+              />
+            </Grid>
+          ))}
         </Grid>
       </div>
     </div>

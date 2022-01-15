@@ -1,11 +1,12 @@
 .navbar-root {
-  margin:20px auto;
+  padding-top: 20px;
   width: 95%;
   display: flex;
   background-color: white;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center;
+  margin:0px auto;
 }
 
 .navbar-logo {

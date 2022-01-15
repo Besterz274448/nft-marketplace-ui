@@ -5,6 +5,7 @@ import Feed from "../pages/Feed";
 import UserProfile from "../pages/UserProfile";
 import ArtworkDetail from "../pages/ArtworkDetail";
 import CreateAsset from "../pages/CreateAsset";
+import Page404 from "../pages/Page404";
 import Alert from "@material-ui/lab/Alert";
 import "../asset/main.css";
 import Fade from "@material-ui/core/Fade";
@@ -18,18 +19,56 @@ function Main() {
     severity: "",
     message: "This is a warning alert",
   });
+  const [nfts, setNFT] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
 
-  React.useEffect(async () => {
-    // Access token is stored in localstorage
+  React.useEffect(() => {
+    const fetchAllData = async () => {
+      let token = getToken();
+      const validateToken = await isTokenValid(token);
+      if (!validateToken) {
+        localStorage.removeItem(LS_KEY);
+        token = undefined;
+      }
+      // /nfts/getNFTAll
+      let [nftsResponse, usersResponse] = await Promise.all([
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts/getNFTAll`).then(
+          (res) => res.json()
+        ),
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/all`).then(
+          (res) => res.json()
+        ),
+      ]);
+
+      let nftsData = nftsResponse.data;
+      let usersData = usersResponse.data;
+
+      let usersMapping = {};
+      for (let i = 0; i < usersData.length; i++) {
+        usersMapping[usersData[i].id] = {
+          avatar: usersData[i].avatar,
+          username: usersData[i].username,
+        };
+      }
+
+      nftsData = nftsData.map((data) => {
+        let { avatar, username } = usersMapping[data.owner];
+        return { ...data, avatar, username };
+      });
+
+      setUsers(usersData);
+      setNFT(nftsData);
+      setAuth(token);
+    };
+
+    fetchAllData();
+  }, []);
+
+  const getToken = () => {
     const ls = window.localStorage.getItem(LS_KEY);
     let token = ls && JSON.parse(ls);
-    const validateToken = await isTokenValid(token);
-    if (!validateToken) {
-      localStorage.removeItem(LS_KEY);
-      token = undefined;
-    }
-    setAuth(token);
-  }, []);
+    return token;
+  };
 
   const isTokenValid = async (token) => {
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
@@ -65,6 +104,7 @@ function Main() {
         handleLoggedOut={handleLoggedOut}
         auth={auth}
         handleStatus={handleStatus}
+        nfts={nfts}
       />
       {status.severity !== "" && (
         <Fade in={status.severity !== ""}>
@@ -75,17 +115,26 @@ function Main() {
                 severity: "",
                 message: "",
               });
-            }}>
+            }}
+          >
             {status.message}
           </Alert>
         </Fade>
       )}
       <section>
         <Routes>
-          <Route exact="true" path="/" element={<Home />} />
-          <Route path="feed/*" element={<Feed />} />
-          <Route path="user/*" element={<UserProfile />} />
-          <Route path="/artworks/:id" element={<ArtworkDetail />} />
+          <Route path="*" element={<Page404 />} />
+          <Route path="/error" element={<Page404 />} />
+          <Route exact="true" path="/" element={<Home nfts={nfts} />} />
+          <Route path="feed/*" element={<Feed nfts={nfts} users={users} />} />
+          <Route
+            path="/user/:id"
+            element={<UserProfile auth={auth} users={users} />}
+          />
+          <Route
+            path="/artworks/:id"
+            element={<ArtworkDetail validateToken={isTokenValid} auth={auth} />}
+          />
           <Route
             exact
             path="/asset/create"
