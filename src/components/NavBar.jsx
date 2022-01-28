@@ -211,7 +211,7 @@ function NavBar({
               <IconButton onClick={getProfilePage}>
                 <Avatar
                   size="medium"
-                  alt={userDetail.username}
+                  alt={userDetail?.username}
                   src={userDetail.avatar}
                   sx={{ width: 56, height: 56 }}
                 />

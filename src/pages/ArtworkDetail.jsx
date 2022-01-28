@@ -82,8 +82,10 @@ function ArtworkDetail({ auth }) {
         const ownerId = result.data.owner;
         if (payload.id === ownerId) {
           setOwner(true);
+          setUser(false); 
         } else {
           setUser(true);
+          setOwner(false); 
         }
       } else {
         setOwner(false);
