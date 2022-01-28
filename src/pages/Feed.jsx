@@ -14,16 +14,14 @@ function Feed({ nfts, users }) {
           { name: "Profiles", to: "/feed/profiles", count:users.length },
           { name: "Artworks", to: "/feed/artworks", count: nfts.length },
         ]}
-        sortComponent={<>TEST</>}
+        sortComponent={""}
       />
       <Routes>
         <Route
-          exact="true"
           path="/artworks"
           element={<ArtWork nfts={nfts} />}
         />
         <Route
-          exact="true"
           path="/profiles"
           element={<Profiles users={users} />}
         />

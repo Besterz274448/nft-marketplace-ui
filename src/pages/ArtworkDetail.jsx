@@ -6,7 +6,7 @@ import Skeleton from "@mui/material/Skeleton";
 import CircularProgress from "@mui/material/CircularProgress";
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
-import { jwtDecode } from "../utils/utility.js";
+import { jwtDecode, sellNFT } from "../utils/utility.js";
 import { Divider, Button, TextField } from "@mui/material";
 import ipfsLogo from "../asset/svg/view.png";
 import metadataLogo from "../asset/svg/boxes.png";
@@ -17,6 +17,34 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+
+function ItemActivity({ activity, date, price, txHash, user }) {
+  return (
+    <div className="artworkdetail-list-activity flex">
+      <div className="flex" style={{ alignItems: "center" }}>
+        <div>
+          <img className="itemActivity-avatar" src={user.avatar} />
+        </div>
+        <div style={{ marginLeft: "10px" }}>
+          <p style={{ margin: 0, padding: 0, fontSize: "16px" }}>
+            <b>{activity}</b> by <b>@{user.username}</b>
+          </p>
+          <p style={{ margin: 0, padding: 0, fontSize: "14px" }}>{date}</p>
+        </div>
+      </div>
+      <div className="flex">
+        <div style={{ marginRight: "20px" }}>
+          <b>{price}</b>
+        </div>
+        <div>
+          <a href={txHash}>
+            <OpenInNewIcon />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ArtworkDetail({ auth }) {
   const params = useParams();
@@ -57,6 +85,9 @@ function ArtworkDetail({ auth }) {
         } else {
           setUser(true);
         }
+      } else {
+        setOwner(false);
+        setUser(false);
       }
 
       setNFT(result.data);
@@ -65,6 +96,18 @@ function ArtworkDetail({ auth }) {
 
     fetchUserData();
   }, [auth, params.id]);
+
+  const callSellNFTContract = async (e) => {
+    e.preventDefault();
+    //gwei
+    //backdrop
+    let price = e.target["nft_price"].value
+    let isSuccess = await sellNFT(nft.tokenId, price);
+    if(isSuccess){
+      //update data
+    }
+    handleModal(false);
+  };
 
   const dateFormat = (str = "1/4/2022, 6:27:39 AM") => {
     const month = [
@@ -135,25 +178,35 @@ function ArtworkDetail({ auth }) {
                   avatar={owner.avatar}
                 />
               </div>
-              <div>
+              <div style={{ padding: "20px 0px" }}>
                 <h2>Description</h2>
                 <p>{nft.description}</p>
               </div>
-              <Divider />
+              <Divider style={{ marginRight: "10px" }} />
               <div className="artworkdetail-link">
                 <h2>Detail</h2>
                 <ul>
                   <li className="artworkdetail-link-detail">
-                    <img src={etherscanLogo} width={15} height={15} alt="etherscan"/>
+                    <img
+                      src={etherscanLogo}
+                      width={15}
+                      height={15}
+                      alt="etherscan"
+                    />
                     <a
                       className="remove-css-navlink"
-                      href={`https://ropsten.etherscan.io/token/0x11e710Ba467d289eCEe9bAD9Ec051FfFD20c56c9?a=${nft.tokenId}`}
+                      href={`https://ropsten.etherscan.io/token/${process.env.REACT_APP_CONTRACT_ADDRESS}?a=${nft.tokenId}`}
                     >
                       View on Etherscan
                     </a>
                   </li>
                   <li className="artworkdetail-link-detail">
-                    <img src={metadataLogo} width={15} height={15} alt="metadata"/>
+                    <img
+                      src={metadataLogo}
+                      width={15}
+                      height={15}
+                      alt="metadata"
+                    />
                     <a
                       className="remove-css-navlink"
                       href={`https://ipfs.io/ipfs/${nft.metadata}/metadata.json`}
@@ -162,7 +215,7 @@ function ArtworkDetail({ auth }) {
                     </a>
                   </li>
                   <li className="artworkdetail-link-detail">
-                    <img src={ipfsLogo} width={15} height={15} alt="ipfs"/>
+                    <img src={ipfsLogo} width={15} height={15} alt="ipfs" />
                     <a
                       className="remove-css-navlink"
                       href={`https://ipfs.io/ipfs/${nft.cid}`}
@@ -174,45 +227,66 @@ function ArtworkDetail({ auth }) {
               </div>
             </div>
             <div className="artworkdetail-half-container">
-              <div className="flex"></div>
-              <div>
-                <h3>CURRENT PRICE</h3>
-                <h1>{nft.currentPrice.toFixed(3)} ETH </h1>
-              </div>
-              <div>
-                {isOwner && (
-                  <button
-                    onClick={() => {
-                      handleModal(true);
-                    }}
-                    className={
-                      nft.sellStatus
-                        ? "artworkdetail-action-button b button-disabled"
-                        : "artworkdetail-action-button b button-available"
-                    }
-                    disabled={nft.sellStatus}
-                  >
-                    <span>SET FOR SALE</span>
-                    <EditIcon />
-                  </button>
-                )}
-                {isUser && (
-                  <>
+              <div style={{ minHeight: "210px" }}>
+                <div>
+                  <h3>CURRENT PRICE</h3>
+                  <h1>{nft.currentPrice.toFixed(3)} ETH </h1>
+                </div>
+                <div>
+                  {isOwner && (
                     <button
+                      onClick={() => {
+                        handleModal(true);
+                      }}
                       className={
                         nft.sellStatus
-                          ? "artworkdetail-action-button b button-available"
-                          : "artworkdetail-action-button b button-disabled"
+                          ? "artworkdetail-action-button b button-disabled"
+                          : "artworkdetail-action-button b button-available"
                       }
                       disabled={nft.sellStatus}
                     >
-                      <span>BUY NFT</span>
+                      <span>SET FOR SALE</span>
+                      <EditIcon />
                     </button>
-                    <p style={{ textAlign: "center", color: "grey" }}>
-                      NOT AVAILABLE FOR SALE
-                    </p>
-                  </>
-                )}
+                  )}
+                  {isUser && (
+                    <>
+                      <button
+                        className={
+                          nft.sellStatus
+                            ? "artworkdetail-action-button b button-available"
+                            : "artworkdetail-action-button b button-disabled"
+                        }
+                        disabled={nft.sellStatus}
+                      >
+                        <span>BUY NFT</span>
+                      </button>
+                      <p style={{ textAlign: "center", color: "grey" }}>
+                        NOT AVAILABLE FOR SALE
+                      </p>
+                    </>
+                  )}
+                </div>
+                <div>
+                  <h2>Item Activity</h2>
+                  <ItemActivity
+                    user={owner}
+                    date={"Jan 16, 2022 at 1:32am"}
+                    activity={"Bought"}
+                    price="5 ETH"
+                  />
+                  <ItemActivity
+                    user={owner}
+                    date={"Jan 16, 2022 at 1:32am"}
+                    activity={"Listed"}
+                    price="5 ETH"
+                  />
+                  <ItemActivity
+                    user={owner}
+                    date={"Jan 16, 2022 at 1:32am"}
+                    activity={"Minted"}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -222,30 +296,36 @@ function ArtworkDetail({ auth }) {
               handleModal();
             }}
           >
-            <DialogTitle>SET NFT PRICE</DialogTitle>
-            <DialogContent>
-              <DialogContentText></DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="nft_price"
-                label="nft_price"
-                type="number"
-                step="0.1"
-                fullWidth
-                variant="outlined"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  handleModal(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button onClick={() => {}}>Submit</Button>
-            </DialogActions>
+            <form onSubmit={callSellNFTContract}>
+              <DialogTitle>SET NFT PRICE</DialogTitle>
+              <DialogContent>
+                <DialogContentText></DialogContentText>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="nft_price"
+                  label="nft_price"
+                  type="number"
+                  inputProps={{
+                    maxLength: 13,
+                    step: "0.001",
+                  }}
+                  fullWidth
+                  variant="outlined"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={() => {
+                    handleModal(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Submit</Button>
+              </DialogActions>
+            </form>
           </Dialog>
         </div>
       ) : (

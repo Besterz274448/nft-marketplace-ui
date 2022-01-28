@@ -16,7 +16,7 @@ function Home({nfts = []}) {
           spacing={3}
         >
           {nfts.slice(1,13).map((data, index) => (  
-            <Grid key={data.cid} item lg={3} md={4} sm={6} xs={10}>
+            <Grid key={data.id} item lg={3} md={4} sm={6} xs={10}>
               <ImageCard
                 id={data.id}
                 contractID={data.owner}
@@ -31,7 +31,7 @@ function Home({nfts = []}) {
           ))}
         </Grid>
       </SectionBar>
-      <SectionBar
+      {/* <SectionBar
         title="Collections"
         link="/feed/profiles"
         name="collections"
@@ -40,7 +40,7 @@ function Home({nfts = []}) {
         title="Featured artworks"
         link="/feed/artworks"
         name="artworks"
-      ></SectionBar>
+      ></SectionBar> */}
     </div>
   );
 }

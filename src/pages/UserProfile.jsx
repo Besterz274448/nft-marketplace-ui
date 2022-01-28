@@ -61,6 +61,10 @@ function UserProfile({ auth, users }) {
         return;
       }
 
+      if(nftsResponse.statusCode !== 200){
+        nftsResponse.data = [];
+      }
+
       if (auth) {
         const payload = jwtDecode(auth).payload;
         const ownerId = params.id;
@@ -76,7 +80,7 @@ function UserProfile({ auth, users }) {
           username: users[i].username,
         };
       }
-
+      
 
       let nftsOwned = JSON.parse(JSON.stringify(nftsResponse))
         .data.filter((data) => data.owner === params.id)
@@ -134,6 +138,16 @@ function UserProfile({ auth, users }) {
     });
   };
 
+  function _arrayBufferToBase64(buffer) {
+    var binary = "";
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
+
   async function getDataImage(file) {
     let result_base64 = await new Promise((resolve) => {
       let fileReader = new FileReader();
@@ -144,7 +158,6 @@ function UserProfile({ auth, users }) {
   }
 
   const handleEditProfile = async (e) => {
-    console.log("test");
     e.preventDefault();
 
     let username = e.target["user_username"].value;
@@ -165,13 +178,19 @@ function UserProfile({ auth, users }) {
       redirect: "follow",
     };
 
-    console.log(formdata);
 
     fetch(`${process.env.REACT_APP_BACKEND_URL}/users`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        handleModal(false);
+        // let newUserData = JSON.parse(JSON.stringify(userProfile));
+        // newUserData.avatar = `data:${img.type};base64,${_arrayBufferToBase64(
+        //   img.src
+        // )}`;
+        // newUserData.username = username;
+        // newUserData.description = description;
+        // setUserProfile(newUserData);
         window.location.reload();
+        handleModal(false);
       })
       .catch((error) => console.log("error", error));
   };
@@ -206,9 +225,9 @@ function UserProfile({ auth, users }) {
               alt="userprofile-avatar"
             />
             <div className="flex">
-              <button className="userprofile-contract-button b">
+              {/* <button className="userprofile-contract-button b">
                 Collected By
-              </button>
+              </button> */}
               {isAuth && (
                 <button
                   className="userprofile-contract-button b flex"
@@ -248,7 +267,7 @@ function UserProfile({ auth, users }) {
                   @{userProfile.username}
                 </span>
               </div>
-              <div className="userprofile-follow">
+              {/* <div className="userprofile-follow">
                 <FollowDetail amount={171} text="Following" />
                 <FollowDetail amount={759} text="Followers" />
                 <div>
@@ -263,8 +282,8 @@ function UserProfile({ auth, users }) {
                     name="Follow"
                   />
                 </div>
-              </div>
-              <div className="userprofile-followedBy">
+              </div> */}
+              {/* <div className="userprofile-followedBy">
                 <div className="b">Folllowed By</div>
                 <div className="userprofile-avatar-followed flex">
                   <div className="avatar-followed">
@@ -306,16 +325,16 @@ function UserProfile({ auth, users }) {
                 <div>
                   <span className="openModal-followed-button b">View all</span>
                 </div>
-              </div>
+              </div> */}
               <p className="b userprofile-header">Bio</p>
               <Divider />
               <p className="userprofile-bio-detail">
                 {userProfile.description}
               </p>
-              <p className="b userprofile-header">Links</p>
+              {/* <p className="b userprofile-header">Links</p>
               <Divider />
               <p className="b userprofile-header">Joined</p>
-              <Divider />
+              <Divider /> */}
             </div>
             <div className="userprofile-descrition-artworks">
               <Tabs

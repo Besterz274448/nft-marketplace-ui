@@ -1,6 +1,6 @@
 import React from "react";
 import "../asset/navbar.css";
-import Logo from "../asset/svg/geometryshape.png"
+import Logo from "../asset/svg/geometryshape.png";
 import Button from "./Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import PhoneMenu from "./PhoneMenu";
@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchItem from "./SearchItem";
-import {jwtDecode} from "../utils/utility";
+import { jwtDecode } from "../utils/utility";
 
 let web3 = undefined; // Will hold the web3 instance
 
@@ -20,20 +20,22 @@ function NavBar({
   handleStatus,
   handleLoggedOut,
   nfts = [],
+  getUserDetail,
 }) {
   const navigate = useNavigate();
   const [selectInput, setSelect] = React.useState(false);
   const [loading, setLoading] = React.useState(false); // Loading button state
   const [searchKey, setSearch] = React.useState("");
+  const [userDetail, setUserDetail] = React.useState({});
   const handleInputOpen = () => setSelect(true);
   const handleInputClose = () => setSelect(false);
-  // const location = useLocation()
-  // const [buttonColor,setButtonColor] = React.useState('black');
 
-  // React.useEffect(() => {
-  //   let path = location.pathname.split('/')[1];
-  //   setButtonColor(path === 'user' ? 'white' : 'black');
-  // }, [location])
+  React.useEffect(() => {
+    if (auth) {
+      let id = jwtDecode(auth).payload.id;
+      setUserDetail(getUserDetail(id));
+    }
+  }, [auth]);
 
   const handleAuthenticate = ({ publicAddress, signature }) => {
     return fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
@@ -127,11 +129,7 @@ function NavBar({
           }}
         >
           <NavLink to="/">
-            <img
-              height="55px"
-              src={Logo}
-              alt="logo"
-            />
+            <img height="55px" src={Logo} alt="logo" />
           </NavLink>
         </div>
         <div className={"navbar-searchfield-container"}>
@@ -157,22 +155,25 @@ function NavBar({
           >
             <div className="keywordSearch">
               <span className="keywordSearch-header">tags</span>
-              {searchKey.trim().length > 0 &&nfts
-                .filter((data) => data.name.toLowerCase().includes(searchKey.toLowerCase()))
-                .map((data) => {
-                  const key = "searchData" + data.id;
-                  return (
-                    <SearchItem
-                      key={key}
-                      id={data.id}
-                      image={`https://ipfs.io/ipfs/${data.cid}`}
-                      name={data.name}
-                      owner={data.owner}
-                      username={data.username}
-                      handleClose={handleInputClose}
-                    />
-                  );
-                })}
+              {searchKey.trim().length > 0 &&
+                nfts
+                  .filter((data) =>
+                    data.name.toLowerCase().includes(searchKey.toLowerCase())
+                  )
+                  .map((data) => {
+                    const key = "searchData" + data.id;
+                    return (
+                      <SearchItem
+                        key={key}
+                        id={data.id}
+                        image={`https://ipfs.io/ipfs/${data.cid}`}
+                        name={data.name}
+                        owner={data.owner}
+                        username={data.username}
+                        handleClose={handleInputClose}
+                      />
+                    );
+                  })}
             </div>
           </div>
         </div>
@@ -208,9 +209,12 @@ function NavBar({
                 />
               </NavLink>
               <IconButton onClick={getProfilePage}>
-                <Avatar size="medium" sx={{ width: 56, height: 56 }}>
-                  N
-                </Avatar>
+                <Avatar
+                  size="medium"
+                  alt={userDetail.username}
+                  src={userDetail.avatar}
+                  sx={{ width: 56, height: 56 }}
+                />
               </IconButton>
               <IconButton onClick={handleLoggedOut}>
                 <Avatar size="medium" sx={{ width: 56, height: 56 }}>

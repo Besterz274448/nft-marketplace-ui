@@ -379,7 +379,7 @@ function CreateAsset({
           </div>
           <div style={{ marginLeft: "24px" }} onClick={handleClickOpen}>
             <span className="createasset-modal-button">+</span>
-            <span className="createasset-modal-button">Create Asset</span>
+            <span className="createasset-modal-button">Create Collection</span>
           </div>
         </div>
         <Button

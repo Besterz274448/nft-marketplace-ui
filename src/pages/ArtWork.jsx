@@ -26,7 +26,7 @@ function ArtWork({ nfts = [] }) {
           spacing={2}
         >
           {nfts.map((data, index) => (
-            <Grid key={data.cid} item lg={3} md={4} sm={6} xs={10}>
+            <Grid key={data.id} item lg={4} md={4} sm={6} xs={10}>
               <ImageCard
                 id={data.id}
                 contractID={data.owner}

@@ -35,7 +35,7 @@ function MenuTabs({
             );
           })}
         </div>
-        <div>{sortComponent}sort unavailable</div>
+        <div>{sortComponent}</div>
       </div>
       <Divider />
     </>
