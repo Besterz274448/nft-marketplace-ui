@@ -18,6 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+const ethers = require("ethers");
 
 function ItemActivity({ activity, date, price, txHash, user }) {
   return (
@@ -134,9 +135,57 @@ function ArtworkDetail({ auth }) {
     setBackdrop(false);
   };
 
-  const handleBuyNFT = ()=>{
-    
-  }
+  const handleBuyNFT = async () => {
+    const payload = jwtDecode(auth).payload;
+    const publicAddress = payload.publicAddress;
+    const token = `Bearer ${auth}`;
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/billings/createBuyBilling?id=${nft.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: token,
+          },
+          method: "GET",
+        }
+      ).then((response) => response.json());
+
+      const txFee = response.data;
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      const tx = await signer.sendTransaction({
+        to: process.env.REACT_APP_BACKEND_WALLET,
+        value: ethers.utils.parseEther(txFee),
+      });
+
+      const txValue = {
+        tokenId: nft.tokenId,
+        buyyer: publicAddress,
+        txHash: tx.hash,
+      };
+
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts/buyNFT`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(txValue),
+      })
+        .then((res) => res.json())
+        .then((data) => window.location.reload())
+        .catch((err) => {
+          throw new Error("Buy failed");
+        });
+    } catch (err) {
+      console.log("err");
+    }
+  };
   const dateFormat = (str = "1/4/2022, 6:27:39 AM") => {
     const month = [
       "JAN",

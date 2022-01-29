@@ -8,7 +8,7 @@ import MuiButton from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate,useLocation} from "react-router-dom";
 import UserItem from "../components/UserItem";
 import { jwtDecode } from "../utils/utility";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -43,6 +43,7 @@ function UserProfile({ auth, users }) {
     file: "",
     updateAvatar: false,
   });
+  const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
 
@@ -110,7 +111,7 @@ function UserProfile({ auth, users }) {
     };
 
     fetchUserData();
-  }, [auth]);
+  }, [auth,location]);
 
   const copyToClipboard = () => {
     let copyText = document.getElementById("userprofile-user-wallet");
