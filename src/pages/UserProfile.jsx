@@ -8,7 +8,7 @@ import MuiButton from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
-import { useParams, useNavigate,useLocation} from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import UserItem from "../components/UserItem";
 import { jwtDecode } from "../utils/utility";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -72,6 +72,8 @@ function UserProfile({ auth, users }) {
         const ownerId = params.id;
         if (payload.id === ownerId) {
           setAuth(true);
+        } else {
+          setAuth(false);
         }
       }
 
@@ -103,7 +105,7 @@ function UserProfile({ auth, users }) {
         name: "",
         type: "",
         file: "",
-        uploadAvatar: false,
+        updateAvatar: false,
       });
       setUserProfile(usersResponse.data);
       setOwned(nftsOwned);
@@ -111,7 +113,7 @@ function UserProfile({ auth, users }) {
     };
 
     fetchUserData();
-  }, [auth,location]);
+  }, [auth, location]);
 
   const copyToClipboard = () => {
     let copyText = document.getElementById("userprofile-user-wallet");
@@ -134,7 +136,7 @@ function UserProfile({ auth, users }) {
     newSrc.name = files[0].name;
     newSrc.type = files[0].type;
     newSrc.src = await getDataImage(files[0]);
-    newSrc.uploadAvatar = true;
+    newSrc.updateAvatar = true;
     setImg(newSrc);
   };
 
@@ -144,7 +146,7 @@ function UserProfile({ auth, users }) {
       name: "",
       type: "",
       file: "",
-      uploadAvatar: false,
+      updateAvatar: false,
     });
   };
 
@@ -172,16 +174,17 @@ function UserProfile({ auth, users }) {
 
     let username = e.target["user_username"].value;
     let description = e.target["user_description"].value;
-    let uploadAvatar = img.uploadAvatar;
+    let updateAvatar = img.updateAvatar;
     let myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${auth}`);
-    console.log(img);
 
     let formdata = new FormData();
     formdata.append("avatar", img.file);
     formdata.append("username", username);
     formdata.append("description", description);
-    formdata.append("uploadAvatar", uploadAvatar);
+    formdata.append("updateAvatar", img.updateAvatar);
+
+    console.log(img);
 
     console.log(formdata);
     var requestOptions = {
@@ -194,9 +197,8 @@ function UserProfile({ auth, users }) {
     fetch(`${process.env.REACT_APP_BACKEND_URL}/users`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-
-        window.location.reload();
         handleModal(false);
+        window.location.reload();
       })
       .catch((error) => console.log("error", error));
   };
@@ -205,7 +207,7 @@ function UserProfile({ auth, users }) {
   return (
     <>
       {userProfile ? (
-        <div className="userprofile-root ">
+        <div className="userprofile-root" style={{ height: "fit-content" }}>
           <div>
             <img
               src={
@@ -342,7 +344,10 @@ function UserProfile({ auth, users }) {
               <p className="b userprofile-header">Joined</p>
               <Divider /> */}
             </div>
-            <div className="userprofile-descrition-artworks" style={{overflow:"hidden"}}>
+            <div
+              className="userprofile-descrition-artworks"
+              style={{ overflow: "hidden" }}
+            >
               <Tabs
                 menu={[
                   { name: "Created", count: created.length },
@@ -372,7 +377,7 @@ function UserProfile({ auth, users }) {
                   name: "",
                   type: "",
                   file: "",
-                  uploadAvatar: false,
+                  updateAvatar: false,
                 });
               }, 500);
             }}
@@ -434,7 +439,7 @@ function UserProfile({ auth, users }) {
                         name: "",
                         type: "",
                         file: "",
-                        uploadAvatar: false,
+                        updateAvatar: false,
                       });
                     }, 500);
                   }}

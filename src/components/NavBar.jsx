@@ -137,11 +137,13 @@ function NavBar({
           <div className="navbar-searchfield">
             <p style={{ color: "#707070" }}>🔎︎</p>
             <input
+              id="navbar-search_input_ultra_violet"
               placeholder="Search Artwork"
               className="navbar-input"
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
+              
               onClick={handleInputOpen}
               onKeyDown={(e) => {
                 if (e.code === "Escape") {
@@ -152,7 +154,7 @@ function NavBar({
           </div>
           <div
             className="inputTag"
-            style={selectInput ? { opacity: 1, visibility: "visible" } : {}}
+            style={selectInput ? { opacity: 1, visibility: "visible" } : {display:"none"}}
           >
             <div className="keywordSearch">
               <span className="keywordSearch-header">tags</span>

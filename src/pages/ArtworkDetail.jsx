@@ -6,7 +6,7 @@ import Skeleton from "@mui/material/Skeleton";
 import CircularProgress from "@mui/material/CircularProgress";
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
-import { jwtDecode, sellNFT } from "../utils/utility.js";
+import { jwtDecode, sellNFT, timeConverter } from "../utils/utility.js";
 import { Divider, Button, TextField } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import ipfsLogo from "../asset/svg/view.png";
@@ -20,16 +20,16 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 const ethers = require("ethers");
 
-function ItemActivity({ activity, date, price, txHash, user }) {
+function ItemActivity({ activity, date, price, txHash, user, avatar }) {
   return (
     <div className="artworkdetail-list-activity flex">
       <div className="flex" style={{ alignItems: "center" }}>
         <div>
-          <img className="itemActivity-avatar" src={user.avatar} />
+          <img className="itemActivity-avatar" src={avatar} />
         </div>
         <div style={{ marginLeft: "10px" }}>
           <p style={{ margin: 0, padding: 0, fontSize: "16px" }}>
-            <b>{activity}</b> by <b>@{user.username}</b>
+            <b>{activity}</b> by <b>@{user}</b>
           </p>
           <p style={{ margin: 0, padding: 0, fontSize: "14px" }}>{date}</p>
         </div>
@@ -100,6 +100,7 @@ function ArtworkDetail({ auth }) {
         setUser(false);
       }
 
+      console.log(result.data);
       setNFT(result.data);
       setUserData(user.data);
     };
@@ -119,7 +120,11 @@ function ArtworkDetail({ auth }) {
       const token = `Bearer ${auth}`;
       try {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts/sellNFT`, {
-          body: JSON.stringify({ id: nft.id, price: parseFloat(price) }),
+          body: JSON.stringify({
+            id: nft.id,
+            price: parseFloat(price),
+            txHash: isSuccess,
+          }),
           headers: {
             "Content-Type": "application/json",
             Authorization: token,
@@ -139,6 +144,7 @@ function ArtworkDetail({ auth }) {
     const payload = jwtDecode(auth).payload;
     const publicAddress = payload.publicAddress;
     const token = `Bearer ${auth}`;
+    setBackdrop(true);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/billings/createBuyBilling?id=${nft.id}`,
@@ -157,7 +163,7 @@ function ArtworkDetail({ auth }) {
       const signer = provider.getSigner();
 
       const tx = await signer.sendTransaction({
-        to: process.env.REACT_APP_BACKEND_WALLET,
+        to: process.env.REACT_APP_CONTRACT_ADDRESS,
         value: ethers.utils.parseEther(txFee),
       });
 
@@ -178,13 +184,17 @@ function ArtworkDetail({ auth }) {
         body: JSON.stringify(txValue),
       })
         .then((res) => res.json())
-        .then((data) => window.location.reload())
+        .then((data) => {
+          setBackdrop(false);
+          window.location.reload();
+        })
         .catch((err) => {
           throw new Error("Buy failed");
         });
     } catch (err) {
       console.log("err");
     }
+    setBackdrop(false);
   };
   const dateFormat = (str = "1/4/2022, 6:27:39 AM") => {
     const month = [
@@ -203,6 +213,12 @@ function ArtworkDetail({ auth }) {
     ];
     let format = str.split(",")[0].split("/");
     return `${format[1]} ${month[format[0] - 1]} ${format[2]} `;
+  };
+
+  const activityCase = {
+    sell: "Listed",
+    mint: "Minted",
+    buy: "Brought",
   };
 
   return (
@@ -357,23 +373,18 @@ function ArtworkDetail({ auth }) {
                 </div>
                 <div>
                   <h2>Item Activity</h2>
-                  <ItemActivity
-                    user={owner}
-                    date={"Jan 16, 2022 at 1:32am"}
-                    activity={"Bought"}
-                    price="5 ETH"
-                  />
-                  <ItemActivity
-                    user={owner}
-                    date={"Jan 16, 2022 at 1:32am"}
-                    activity={"Listed"}
-                    price="5 ETH"
-                  />
-                  <ItemActivity
-                    user={owner}
-                    date={"Jan 16, 2022 at 1:32am"}
-                    activity={"Minted"}
-                  />
+                  {nft !== null &&
+                    nft.activities.map((data, index) => {
+                      return (
+                        <ItemActivity
+                          key={data.txHash}
+                          avatar={data.avatar}
+                          user={data.username}
+                          date={timeConverter(data.createdDate)}
+                          activity={activityCase[data.activityType]}
+                        />
+                      );
+                    })}
                 </div>
               </div>
             </div>

@@ -51,7 +51,7 @@ export const jwtDecode = (token) => {
   }
 };
 
-export const sellNFT = async (tokenId,price) => {
+export const sellNFT = async (tokenId, price) => {
   if (!window.ethereum) {
     console.log("metamask extension not found");
     //
@@ -68,19 +68,42 @@ export const sellNFT = async (tokenId,price) => {
     signer
   );
 
-
-  console.log('call sell nft');
-  const etherPrice = ethers.utils.parseUnits(price,'ether');
-  console.log(etherPrice)
+  console.log("call sell nft");
+  const etherPrice = ethers.utils.parseUnits(price, "ether");
+  console.log(etherPrice);
   try {
     const tx = await contract.sellNFT(tokenId, etherPrice);
-    console.log(tx);
     const receipt = await tx.wait();
-    console.log(receipt);
-    return true;
+    return tx.hash;
   } catch (e) {
     console.log(e.message);
     return false;
   }
 };
 
+export const timeConverter = (UNIX_timestamp) => {
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time =
+    date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
+  return time;
+};
