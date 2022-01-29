@@ -33,7 +33,8 @@ function NavBar({
   React.useEffect(() => {
     if (auth) {
       let id = jwtDecode(auth).payload.id;
-      setUserDetail(getUserDetail(id));
+      let data = { ...getUserDetail(id) };
+      setUserDetail(data);
     }
   }, [auth]);
 
@@ -178,6 +179,13 @@ function NavBar({
           </div>
         </div>
         <div className="navbar-button">
+          <NavLink
+            to="/feed/artworks"
+            className="remove-css-navlink"
+            style={{ marginRight: "20px" }}
+          >
+            <span className="button-explore">Explore</span>
+          </NavLink>
           {!auth ? (
             <Button //wallet button
               onClick={handleClick}
@@ -211,8 +219,16 @@ function NavBar({
               <IconButton onClick={getProfilePage}>
                 <Avatar
                   size="medium"
-                  alt={userDetail?.username}
-                  src={userDetail.avatar}
+                  alt={
+                    userDetail.username !== undefined
+                      ? userDetail.username.toUpperCase()
+                      : ""
+                  }
+                  src={
+                    userDetail.avatar !== undefined
+                      ? userDetail.avatar
+                      : "/static/images/avatar/1.jpg"
+                  }
                   sx={{ width: 56, height: 56 }}
                 />
               </IconButton>

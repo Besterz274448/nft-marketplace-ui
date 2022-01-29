@@ -9,7 +9,6 @@ import Page404 from "../pages/Page404";
 import Alert from "@material-ui/lab/Alert";
 import "../asset/main.css";
 import Fade from "@material-ui/core/Fade";
-import {jwtDecode} from "../utils/utility";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 const LS_KEY = "login-with-metamask:auth";
@@ -20,9 +19,9 @@ function Main() {
     severity: "",
     message: "This is a warning alert",
   });
+  const [open, setOpen] = React.useState(true);
   const [nfts, setNFT] = React.useState([]);
   const [users, setUsers] = React.useState([]);
-  const [userDetail, setUserDetail] = React.useState();
   const location = useLocation();
 
   React.useEffect(() => {
@@ -43,8 +42,9 @@ function Main() {
         ),
       ]);
 
-      let nftsData = nftsResponse.data;
-      let usersData = usersResponse.data;
+      let nftsData = nftsResponse.data === undefined ? [] : nftsResponse.data;
+      let usersData =
+        usersResponse.data === undefined ? [] : usersResponse.data;
 
       let usersMapping = {};
       for (let i = 0; i < usersData.length; i++) {
@@ -54,7 +54,6 @@ function Main() {
         };
       }
 
-      nftsData = nftsData === undefined ? [] : nftsData;
       nftsData = nftsData.map((data) => {
         let { avatar, username } = usersMapping[data.owner];
         return { ...data, avatar, username };
@@ -79,8 +78,9 @@ function Main() {
         ),
       ]);
 
-      let nftsData = nftsResponse.data;
-      let usersData = usersResponse.data;
+      let nftsData = nftsResponse.data === undefined ? [] : nftsResponse.data;
+      let usersData =
+        usersResponse.data === undefined ? [] : usersResponse.data;
 
       let usersMapping = {};
       for (let i = 0; i < usersData.length; i++) {
@@ -104,9 +104,9 @@ function Main() {
     }
   }, [location]);
 
-  const getUserData = (id)=>{
-    return users.filter(data => data.id === id)[0];
-  }
+  const getUserData = (id) => {
+    return users.filter((data) => data.id === id)[0];
+  };
 
   const getToken = () => {
     const ls = window.localStorage.getItem(LS_KEY);
@@ -139,6 +139,9 @@ function Main() {
 
   const handleStatus = (severity, message) => {
     setStatus({ severity, message });
+    setTimeout(() => {
+      setStatus({ severity: "", message: "" });
+    }, 5000);
   };
 
   return (

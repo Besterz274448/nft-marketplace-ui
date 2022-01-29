@@ -26,6 +26,7 @@ function Home({nfts = []}) {
                 sellStatus={data.sellStatus}
                 username={data.username}
                 avatar={data.avatar}
+                description={data.description}
               />
             </Grid>
           ))}

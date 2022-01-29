@@ -10,8 +10,9 @@ function ImageCard({
   price = 0.0,
   contractID = "",
   sellStatus = false,
-  username="",
-  avatar
+  username = "",
+  description = "",
+  avatar,
 }) {
   return (
     <div className="image-card-container">
@@ -23,10 +24,24 @@ function ImageCard({
           <span className="image-card-detail-img-name">{name}</span>
         </NavLink>
         <div>
-          <ArtistContract avatar={avatar} contractID={contractID} username={username} border="none" />
+          <ArtistContract
+            avatar={avatar}
+            contractID={contractID}
+            username={username}
+            border="none"
+          />
+          <div
+            style={{
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {description}
+          </div>
         </div>
       </div>
-      <div></div>
+
       <hr />
       <div className="image-card-price">
         <NavLink to={`/artworks/${id}`} className="remove-css-navlink">

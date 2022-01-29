@@ -41,6 +41,7 @@ function UserProfile({ auth, users }) {
     name: "",
     type: "",
     file: "",
+    updateAvatar: false,
   });
   const params = useParams();
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ function UserProfile({ auth, users }) {
         return;
       }
 
-      if(nftsResponse.statusCode !== 200){
+      if (nftsResponse.statusCode !== 200) {
         nftsResponse.data = [];
       }
 
@@ -80,7 +81,6 @@ function UserProfile({ auth, users }) {
           username: users[i].username,
         };
       }
-      
 
       let nftsOwned = JSON.parse(JSON.stringify(nftsResponse))
         .data.filter((data) => data.owner === params.id)
@@ -97,6 +97,13 @@ function UserProfile({ auth, users }) {
           return { ...data, avatar, username };
         });
 
+      setImg({
+        src: usersResponse.data.avatar,
+        name: "",
+        type: "",
+        file: "",
+        uploadAvatar: false,
+      });
       setUserProfile(usersResponse.data);
       setOwned(nftsOwned);
       setCreated(nftsCreated);
@@ -126,6 +133,7 @@ function UserProfile({ auth, users }) {
     newSrc.name = files[0].name;
     newSrc.type = files[0].type;
     newSrc.src = await getDataImage(files[0]);
+    newSrc.uploadAvatar = true;
     setImg(newSrc);
   };
 
@@ -135,6 +143,7 @@ function UserProfile({ auth, users }) {
       name: "",
       type: "",
       file: "",
+      uploadAvatar: false,
     });
   };
 
@@ -162,15 +171,18 @@ function UserProfile({ auth, users }) {
 
     let username = e.target["user_username"].value;
     let description = e.target["user_description"].value;
-
+    let uploadAvatar = img.uploadAvatar;
     let myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${auth}`);
+    console.log(img);
 
     let formdata = new FormData();
     formdata.append("avatar", img.file);
     formdata.append("username", username);
     formdata.append("description", description);
+    formdata.append("uploadAvatar", uploadAvatar);
 
+    console.log(formdata);
     var requestOptions = {
       method: "PUT",
       headers: myHeaders,
@@ -178,17 +190,10 @@ function UserProfile({ auth, users }) {
       redirect: "follow",
     };
 
-
     fetch(`${process.env.REACT_APP_BACKEND_URL}/users`, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        // let newUserData = JSON.parse(JSON.stringify(userProfile));
-        // newUserData.avatar = `data:${img.type};base64,${_arrayBufferToBase64(
-        //   img.src
-        // )}`;
-        // newUserData.username = username;
-        // newUserData.description = description;
-        // setUserProfile(newUserData);
+
         window.location.reload();
         handleModal(false);
       })
@@ -336,7 +341,7 @@ function UserProfile({ auth, users }) {
               <p className="b userprofile-header">Joined</p>
               <Divider /> */}
             </div>
-            <div className="userprofile-descrition-artworks">
+            <div className="userprofile-descrition-artworks" style={{overflow:"hidden"}}>
               <Tabs
                 menu={[
                   { name: "Created", count: created.length },
@@ -360,6 +365,15 @@ function UserProfile({ auth, users }) {
             open={modal}
             onClose={() => {
               handleModal(false);
+              setTimeout(() => {
+                setImg({
+                  src: userProfile.avatar,
+                  name: "",
+                  type: "",
+                  file: "",
+                  uploadAvatar: false,
+                });
+              }, 500);
             }}
             maxWidth={"xs"}
             fullWidth
@@ -413,6 +427,15 @@ function UserProfile({ auth, users }) {
                 <MuiButton
                   onClick={() => {
                     handleModal(false);
+                    setTimeout(() => {
+                      setImg({
+                        src: userProfile.avatar,
+                        name: "",
+                        type: "",
+                        file: "",
+                        uploadAvatar: false,
+                      });
+                    }, 500);
                   }}
                 >
                   Cancel

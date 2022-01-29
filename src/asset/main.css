@@ -29,6 +29,7 @@
     height: 100vh;
   }
   .feed-items {
+    overflow:hidden;
     flex: 0.75;
   }
 }

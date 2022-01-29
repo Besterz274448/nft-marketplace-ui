@@ -6,7 +6,7 @@ function ArtistCard({user}) {
   return (
     <div className="image-card-container">
       <div className="artist-card-container">
-        <img className="artist-card-img" src="https://documents.dickson-constant.com/medias/images/catalogue/api/m654-grey-680.jpg" alt="artistCardImage"></img>
+        <img className="artist-card-img" src="https://image.freepik.com/free-vector/gradient-isometric-nft-concept_52683-62009.jpg" alt="artistCardImage"></img>
       </div>
       <div className="artist-detail-container">
         <div className="artist-detail-avatar-box">

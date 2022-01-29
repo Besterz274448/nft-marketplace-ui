@@ -31,9 +31,13 @@ function UploadImage(props) {
         <div className="uploadimage-preview">
           {props.img.src && (
             <img
-              src={`data:${props.img.type};base64,${_arrayBufferToBase64(
-                props.img.src
-              )}`}
+              src={
+                typeof props.img.src === "string"
+                  ? props.img.src
+                  : `data:${props.img.type};base64,${_arrayBufferToBase64(
+                      props.img.src
+                    )}`
+              }
               width={"100%"}
               height={"300px"}
               alt="preview"

@@ -1,13 +1,14 @@
 import React from "react";
 import "../asset/main.css";
 import ArtistContract from "../components/ArtistContract";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useLocation } from "react-router";
 import Skeleton from "@mui/material/Skeleton";
 import CircularProgress from "@mui/material/CircularProgress";
 import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import { jwtDecode, sellNFT } from "../utils/utility.js";
 import { Divider, Button, TextField } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
 import ipfsLogo from "../asset/svg/view.png";
 import metadataLogo from "../asset/svg/boxes.png";
 import etherscanLogo from "../asset/svg/etherscan.png";
@@ -54,9 +55,15 @@ function ArtworkDetail({ auth }) {
   const [isOwner, setOwner] = React.useState(false);
   const [isUser, setUser] = React.useState(false);
   const [modal, setModal] = React.useState(false);
+  const [confirm, setConfirm] = React.useState(false);
+  const [backdropStatus, setBackdrop] = React.useState(false);
 
   const handleModal = (flag) => {
     setModal(flag);
+  };
+
+  const handleConfirm = (cf) => {
+    setConfirm(cf);
   };
 
   React.useEffect(() => {
@@ -82,10 +89,10 @@ function ArtworkDetail({ auth }) {
         const ownerId = result.data.owner;
         if (payload.id === ownerId) {
           setOwner(true);
-          setUser(false); 
+          setUser(false);
         } else {
           setUser(true);
-          setOwner(false); 
+          setOwner(false);
         }
       } else {
         setOwner(false);
@@ -102,13 +109,27 @@ function ArtworkDetail({ auth }) {
   const callSellNFTContract = async (e) => {
     e.preventDefault();
     //gwei
-    //backdrop
-    let price = e.target["nft_price"].value
-    let isSuccess = await sellNFT(nft.tokenId, price);
-    if(isSuccess){
-      //update data
-    }
+    setBackdrop(true);
     handleModal(false);
+    let price = e.target["nft_price"].value;
+    console.log(nft.tokenId);
+    let isSuccess = await sellNFT(nft.tokenId, price);
+    if (isSuccess) {
+      try {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts/sellNFT`, {
+          body: JSON.stringify({ id: nft.id, price: parseFloat(price) }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+        }).then((response) => {
+          window.location.reload();
+        });
+      } catch (err) {
+        console.log("err");
+      }
+    }
+    setBackdrop(false);
   };
 
   const dateFormat = (str = "1/4/2022, 6:27:39 AM") => {
@@ -132,6 +153,12 @@ function ArtworkDetail({ auth }) {
 
   return (
     <div>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 20 }}
+        open={backdropStatus}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {nft !== null ? (
         <div className="artworkdetail-root ">
           <div className="artworkdetail-img">
@@ -259,7 +286,10 @@ function ArtworkDetail({ auth }) {
                             ? "artworkdetail-action-button b button-available"
                             : "artworkdetail-action-button b button-disabled"
                         }
-                        disabled={nft.sellStatus}
+                        disabled={!nft.sellStatus}
+                        onClick={() => {
+                          handleConfirm(true);
+                        }}
                       >
                         <span>BUY NFT</span>
                       </button>
@@ -329,6 +359,43 @@ function ArtworkDetail({ auth }) {
               </DialogActions>
             </form>
           </Dialog>
+          <div>
+            <Dialog
+              open={confirm}
+              onClose={() => {
+                handleConfirm(false);
+              }}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">CONFIRMATION</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Do you really want to buy this NFT ?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  sx={{backgroundColor:"red"}}
+                  variant="contained"
+                  onClick={() => {
+                    handleConfirm(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    alert("buy it");
+                  }}
+                  autoFocus
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         </div>
       ) : (
         <div className="artworkdetail-progress">

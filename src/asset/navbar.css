@@ -6,9 +6,17 @@
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center;
-  margin:0px auto;
+  margin: 0px auto;
 }
 
+.button-explore {
+  font-size: 24px;
+  color: rgba(200, 200, 200, 0.7);
+}
+
+.button-explore:hover {
+  color: rgba(0, 0, 0, 0.7);
+}
 .navbar-logo {
   display: flex;
   justify-content: center;
@@ -61,6 +69,7 @@
 .navbar-button {
   display: flex; /*remark*/
   justify-content: center;
+  align-items: center;
   z-index: 150;
   position: relative;
 }

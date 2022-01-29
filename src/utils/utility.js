@@ -1,7 +1,6 @@
-const contractABI = require("../RuNFT.json");
+import contractABI from "../RuNFT.json";
 const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
 const masterContract = process.env.REACT_APP_RECEIVER_ADDRESS;
-const Web3 = require("web3");
 const ethers = require("ethers");
 
 export const mintToken = async (url) => {
@@ -72,8 +71,9 @@ export const sellNFT = async (tokenId,price) => {
 
   console.log('call sell nft');
   const etherPrice = ethers.utils.parseUnits(price,'ether');
+  console.log(etherPrice)
   try {
-    const tx = await contract.sellNFT(masterContract,tokenId, etherPrice);
+    const tx = await contract.sellNFT(tokenId, etherPrice);
     console.log(tx);
     const receipt = await tx.wait();
     console.log(receipt);
