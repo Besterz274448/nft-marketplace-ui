@@ -115,11 +115,13 @@ function ArtworkDetail({ auth }) {
     console.log(nft.tokenId);
     let isSuccess = await sellNFT(nft.tokenId, price);
     if (isSuccess) {
+      const token = `Bearer ${auth}`;
       try {
         fetch(`${process.env.REACT_APP_BACKEND_URL}/nfts/sellNFT`, {
           body: JSON.stringify({ id: nft.id, price: parseFloat(price) }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: token,
           },
           method: "PUT",
         }).then((response) => {
@@ -132,6 +134,9 @@ function ArtworkDetail({ auth }) {
     setBackdrop(false);
   };
 
+  const handleBuyNFT = ()=>{
+    
+  }
   const dateFormat = (str = "1/4/2022, 6:27:39 AM") => {
     const month = [
       "JAN",
@@ -293,9 +298,11 @@ function ArtworkDetail({ auth }) {
                       >
                         <span>BUY NFT</span>
                       </button>
-                      <p style={{ textAlign: "center", color: "grey" }}>
-                        NOT AVAILABLE FOR SALE
-                      </p>
+                      {!nft.sellStatus && (
+                        <p style={{ textAlign: "center", color: "grey" }}>
+                          NOT AVAILABLE FOR SALE
+                        </p>
+                      )}
                     </>
                   )}
                 </div>
@@ -376,7 +383,7 @@ function ArtworkDetail({ auth }) {
               </DialogContent>
               <DialogActions>
                 <Button
-                  sx={{backgroundColor:"red"}}
+                  sx={{ backgroundColor: "red" }}
                   variant="contained"
                   onClick={() => {
                     handleConfirm(false);
@@ -387,7 +394,8 @@ function ArtworkDetail({ auth }) {
                 <Button
                   variant="contained"
                   onClick={() => {
-                    alert("buy it");
+                    handleBuyNFT();
+                    handleConfirm(false);
                   }}
                   autoFocus
                 >

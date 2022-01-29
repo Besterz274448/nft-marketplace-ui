@@ -7,7 +7,9 @@ import RadioGroupButton from "../components/RadioGroupButton";
 import PriceRange from "../components/PriceRange";
 
 function ArtWork({ nfts = [] }) {
-  var option = ["All", "Available"];
+  var option = ["All", "Available for Sale"];
+  const [rangeOfprice,setRange] = React.useState([0,0]);
+  const [availability,setAvailability] = React.useState("All");
   return (
     <div className="feed-items-container">
       <div className="feed-search">
