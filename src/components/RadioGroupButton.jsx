@@ -13,7 +13,7 @@ function RadioGroupButton(props) {
       {props.option.map((l, i) => {
         return (
           <div key={l+i} className="accord-box">
-            <FormControlLabel value={l} control={<Radio />} label={<div className="b">{l}</div>} />
+            <FormControlLabel value={l}  onChange={props.onChange} control={<Radio />} label={<div className="b">{l}</div>} />
           </div>
         );
       })}
