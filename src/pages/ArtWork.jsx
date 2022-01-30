@@ -20,12 +20,12 @@ function ArtWork({ nfts = [] }) {
     const min = e.target[0].value;
     const max = e.target[1].value;
     setRange([min, max]);
+    
   };
 
   const getData = (items) => {
     const min = rangeOfprice[0];
     const max = rangeOfprice[1];
-    console.log(items);
     let filterItem = [];
     if ((min === 0 && max === 0) || min > max) {
       filterItem = items;
