@@ -20,7 +20,6 @@ function ArtWork({ nfts = [] }) {
     const min = e.target[0].value;
     const max = e.target[1].value;
     setRange([min, max]);
-    
   };
 
   const getData = (items) => {

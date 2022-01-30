@@ -36,7 +36,7 @@ function ItemActivity({ activity, date, price, txHash, user, avatar }) {
       </div>
       <div className="flex">
         <div style={{ marginRight: "20px" }}>
-          <b>{price}</b>
+          <b>{price !== 0 && price}</b>
         </div>
         <div>
           <a href={txHash}>
@@ -380,6 +380,8 @@ function ArtworkDetail({ auth }) {
                           key={data.txHash}
                           avatar={data.avatar}
                           user={data.username}
+                          price={data.buyPrice}
+                          txHash={`https://ropsten.etherscan.io/tx/${data.txHash}`}
                           date={timeConverter(data.createdDate)}
                           activity={activityCase[data.activityType]}
                         />
